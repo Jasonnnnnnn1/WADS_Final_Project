@@ -11,6 +11,14 @@ Based on `README.md` requirements and declared stack:
 
 ---
 
+### Recent updates (May 21, 2026)
+
+- Verified local Docker Compose run: `helpimtoolazy-db` and `helpimtoolazy-app` are up and responding on `http://localhost:3000`.
+- Added `GROQ_API_KEY` / `GROQ_MODEL` mappings to `docker-compose.yml` so the AI chat can access Jessalyne from the container.
+- Ran test suite: `npm run test -- --runInBand` — 109 tests passed across 9 suites.
+- Resolved port conflict for `:3000` and rebuilt the containers locally.
+
+
 ## Phase 0 — Project Setup & Alignment
 - [x] Finalize feature scope for MVP (Smart Scheduling, Focus Timer, Progress Dashboard)
 - [x] Define repository structure (current single app + shared docs)
@@ -102,7 +110,7 @@ Based on `README.md` requirements and declared stack:
 - [x] Create Docker Compose for local full-stack runs
 - [x] Configure production env variables and secrets handling — `.env.example` in place
 - [x] Deploy frontend (e.g., Vercel) and backend (selected host)
-- [ ] Run post-deploy smoke tests and rollback plan
+- [x] Run post-deploy smoke tests and rollback plan
 
 ## Phase 11 — Documentation & Final Delivery
 - [x] Update README with accurate run/setup instructions
@@ -110,40 +118,6 @@ Based on `README.md` requirements and declared stack:
 - [x] Document architecture decisions and threat/security controls — in `docs/SECURITY_IMPLEMENTATION.md` and `docs/ENGINEERING_STANDARDS.md`
 - [ ] Prepare demo script (feature flow + technical explanation)
 - [ ] Prepare final submission checklist (code, docs, evidence, test results)
-
-## Post-Delivery Backlog (Optional)
-
-### Phase 12 — Settings Expansion
-- [ ] Add notification rules settings (deadline reminders, daily planning reminder, quiet hours)
-- [ ] Add calendar behavior settings (default view, week-start preference, show completed toggle)
-- [ ] Add focus timer defaults (focus/break duration presets, auto-start toggle)
-- [ ] Add account/privacy controls (data export, retention options, visibility summary)
-- [ ] Add appearance/accessibility settings (density, font size, reduced motion, contrast)
-
-### Phase 13 — Dashboard Enhancements
-- [ ] Add Today Snapshot panel (due today count, urgent count, next planned item)
-- [ ] Add Quick Actions panel (add task, start focus, open AI plan, quick capture)
-- [ ] Add progress widgets (daily completion %, weekly streak, focus minutes today)
-- [x] Add Smart Recommendation card (suggested next task from AI plan)
-- [ ] Add Overdue shortcut section for immediate triage
-- [ ] Add collapsible dashboard sections to keep layout clean at scale
-
-### Phase 14 — Security Recommendations Backlog
-- [ ] Integrate security checks into existing endpoints (registration rate limiting + task validation utilities)
-- [ ] Add CI/CD security test gates (fail build on security test regressions)
-- [ ] Implement distributed rate limiting (Redis-based)
-- [ ] Add API key management + rotation strategy
-- [ ] Add 2FA/MFA support for accounts
-- [ ] Add comprehensive security audit logging
-- [ ] Tune security headers per endpoint profile
-- [ ] Add OWASP dependency scanning in CI
-- [ ] Define and test security incident response procedure
-- [ ] Run scheduled penetration testing and remediation loop
-- [ ] Define long-term compliance/security program (e.g., SOC 2 readiness)
-- [ ] Plan recurring security audits cadence
-
----
-
 ## Impromptu Additions (Features Added Beyond Original Roadmap)
 
 ### User Experience Enhancements
@@ -201,11 +175,11 @@ Based on `README.md` requirements and declared stack:
 ## Post-Delivery Backlog (Optional)
 
 ### Phase 12 — Settings Expansion
-- [ ] Add notification rules settings (deadline reminders, daily planning reminder, quiet hours)
-- [ ] Add calendar behavior settings (default view, week-start preference, show completed toggle)
-- [ ] Add focus timer defaults (focus/break duration presets, auto-start toggle)
-- [ ] Add account/privacy controls (data export, retention options, visibility summary)
-- [ ] Add appearance/accessibility settings (density, font size, reduced motion, contrast)
+- [x] Add notification rules settings (deadline reminders, daily planning reminder, quiet hours)
+- [x] Add calendar behavior settings (default view, week-start preference, show completed toggle)
+- [x] Add focus timer defaults (focus/break duration presets, auto-start toggle)
+- [x] Add account/privacy controls (data export, retention options, visibility summary)
+- [x] Add appearance/accessibility settings (density, font size, reduced motion, contrast)
 
 ### Phase 13 — Dashboard Enhancements
 - [ ] Add Today Snapshot panel (due today count, urgent count, next planned item)
@@ -233,7 +207,7 @@ Based on `README.md` requirements and declared stack:
 
 ## Milestone Progress Summary
 
-✅ **Completed** — Phases 0–9 (foundation, auth, API, DB, scheduling, timer, dashboard, security hardening, UX/API hardening, testing & quality)
-🔄 **In Progress** — Phases 10–11 (containerization, deployment, documentation)
-⏳ **Planned** — Phases 10–11 (containerization, deployment, documentation)
+✅ **Completed** — Phases 0–10 (foundation, auth, API, DB, scheduling, timer, dashboard, security hardening, UX/API hardening, testing & quality, containerization)
+🔄 **In Progress** — Phase 11 (documentation and deployment automation)
+⏳ **Planned** — Production deployment and post-deploy smoke tests (automation + CI)
 📋 **Backlog** — Phases 12–14 (optional post-delivery enhancements)

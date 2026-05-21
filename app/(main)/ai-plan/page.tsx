@@ -169,7 +169,7 @@ export default function AiPlanPage() {
           <CardContent className="py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-sm font-semibold flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-indigo-600" /> Groq-powered planning
+                <Sparkles className="h-4 w-4 text-indigo-600" /> AI-powered planning
               </p>
               <p className="text-sm text-muted-foreground">
                 Generate AI priorities, smart recommendations, and burnout checks from your live task list.
@@ -177,7 +177,7 @@ export default function AiPlanPage() {
             </div>
             <Button onClick={handleGenerateGroqPlan} disabled={aiLoading || tasks.length === 0}>
               {aiLoading ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
-              Generate Groq Plan
+              Generate AI Plan
             </Button>
           </CardContent>
         </Card>

@@ -29,6 +29,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { profileApi, tasksApi, type Task } from "@/lib/api-client";
+import { useUserSettings } from "@/lib/user-settings";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -37,7 +38,10 @@ type CalendarView = "week" | "month";
 
 export default function CalendarPage() {
   const router = useRouter();
-  const [view, setView] = React.useState<CalendarView>("week");
+  const { settings } = useUserSettings();
+  const defaultView = settings?.calendarPreferences?.defaultView ?? "week";
+  const defaultWeekStart = settings?.calendarPreferences?.weekStartsOn ?? 1;
+  const [view, setView] = React.useState<CalendarView>(defaultView as CalendarView);
   const [currentDate, setCurrentDate] = React.useState(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);
   const [loading, setLoading] = React.useState(true);
@@ -86,7 +90,7 @@ export default function CalendarPage() {
 
   const visibleTasks = sortedTasks;
 
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: defaultWeekStart });
   const weekDays = Array.from({ length: 7 }, (_, index) => addDays(weekStart, index));
 
   const monthSections = React.useMemo(() => {

@@ -129,3 +129,11 @@
     overflow-x: hidden;
   }
 }
+
+/* Reduced motion toggle applied when user preference set */
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+  transition: none !important;
+  animation: none !important;
+}

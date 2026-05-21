@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,16 +9,53 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { DEFAULT_AI_SETTINGS, loadAISettings, saveAISettings, type AISettings } from "@/lib/ai-preferences";
+import { settingsApi } from "@/lib/api-client";
 import { Sparkles, RotateCcw, Save } from "lucide-react";
 
 export default function AISettingsPanel() {
   const [settings, setSettings] = useState<AISettings>(loadAISettings);
   const [savedMessage, setSavedMessage] = useState("");
+  const [isLocalOnly, setIsLocalOnly] = useState(true);
 
-  const handleSave = () => {
-    saveAISettings(settings);
-    setSavedMessage("AI preferences saved for this browser.");
-    window.setTimeout(() => setSavedMessage(""), 2500);
+  useEffect(() => {
+    let mounted = true;
+    void (async () => {
+      try {
+        const res = await settingsApi.get();
+        if (!mounted) return;
+        if (res?.aiPreferences) {
+          setSettings((prev) => ({ ...prev, ...res.aiPreferences }));
+          setIsLocalOnly(false);
+        }
+      } catch {
+        // keep local defaults
+      }
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      await settingsApi.update({ aiPreferences: settings });
+      setSavedMessage("AI preferences saved.");
+      setIsLocalOnly(false);
+      window.setTimeout(() => setSavedMessage(""), 2500);
+    } catch {
+      // fallback to local storage
+      // (keep existing local behavior for offline/dev)
+      try {
+        // persist via the local helper to keep normalization consistent
+        saveAISettings(settings);
+        setSavedMessage("AI preferences saved locally.");
+        window.setTimeout(() => setSavedMessage(""), 2500);
+      } catch {
+        setSavedMessage("Failed to save AI preferences.");
+        window.setTimeout(() => setSavedMessage(""), 2500);
+      }
+    }
   };
 
   const handleReset = () => {
@@ -37,10 +74,10 @@ export default function AISettingsPanel() {
               <Sparkles className="h-4 w-4 text-indigo-600" /> AI Preferences
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Tune Groq&apos;s tone, response length, and study style for this browser session.
+              Tune Jessalyne's tone, response length, and study style for this browser session.
             </p>
           </div>
-          <Badge variant="outline">Local only</Badge>
+            {!isLocalOnly ? null : <Badge variant="outline">Local only</Badge>}
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -162,7 +199,7 @@ export default function AISettingsPanel() {
         </div>
 
         <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground space-y-1">
-          <p>Prompt style changes the tone Groq uses in chat and task help.</p>
+          <p>Prompt style changes the tone Jessalyne uses in chat and task help.</p>
           <p>Max response length controls how verbose the assistant should be.</p>
           <p>Study mode shifts the assistant toward balanced planning, deep focus, or exam prep.</p>
           <p>Work hours and weekend setting guide when AI schedules your tasks.</p>

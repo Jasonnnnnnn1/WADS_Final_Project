@@ -10,6 +10,7 @@ import {
   History, Coffee, Brain, Loader2, Volume2, VolumeX, Music, Headphones,
 } from "lucide-react";
 import { profileApi, tasksApi, sessionsApi, type Task, type FocusSessionRecord } from "@/lib/api-client";
+import { useUserSettings } from "@/lib/user-settings";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -325,8 +326,19 @@ export default function FocusTimerPage() {
   const [selectedTaskId, setSelectedTaskId] = React.useState<string | null>(null);
 
   // ── Timer ──
-  const [mode, setMode] = React.useState<Mode>("focus");
-  const [secondsLeft, setSecondsLeft] = React.useState(MODE_CONFIG.focus.minutes * 60);
+    const { settings } = useUserSettings();
+
+    const [mode, setMode] = React.useState<Mode>("focus");
+    const initialFocus = settings?.focusTimerDefaults?.focus ?? MODE_CONFIG.focus.minutes;
+    const initialShort = settings?.focusTimerDefaults?.short ?? MODE_CONFIG.short.minutes;
+    const initialLong = settings?.focusTimerDefaults?.long ?? MODE_CONFIG.long.minutes;
+    const derivedConfig = React.useMemo(() => ({
+      focus: { ...MODE_CONFIG.focus, minutes: initialFocus },
+      short: { ...MODE_CONFIG.short, minutes: initialShort },
+      long: { ...MODE_CONFIG.long, minutes: initialLong },
+    }), [initialFocus, initialShort, initialLong]);
+
+    const [secondsLeft, setSecondsLeft] = React.useState(derivedConfig.focus.minutes * 60);
   const [running, setRunning] = React.useState(false);
   const startedAtRef = React.useRef<string | null>(null);
   const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
@@ -389,7 +401,7 @@ export default function FocusTimerPage() {
   function switchMode(next: Mode) {
     if (running) { if (intervalRef.current) clearInterval(intervalRef.current); setRunning(false); }
     setMode(next);
-    setSecondsLeft(MODE_CONFIG[next].minutes * 60);
+    setSecondsLeft(derivedConfig[next].minutes * 60);
     startedAtRef.current = null;
   }
 
@@ -405,7 +417,7 @@ export default function FocusTimerPage() {
   function handleReset() {
     if (intervalRef.current) clearInterval(intervalRef.current);
     setRunning(false);
-    setSecondsLeft(MODE_CONFIG[mode].minutes * 60);
+    setSecondsLeft(derivedConfig[mode].minutes * 60);
     startedAtRef.current = null;
   }
 
@@ -413,7 +425,7 @@ export default function FocusTimerPage() {
     if (mode !== "focus") { showToast("Break over! Time to focus.", true); return; }
     const completedAt = new Date().toISOString();
     const startedAt = startedAtRef.current ?? completedAt;
-    const durationMinutes = MODE_CONFIG[mode].minutes;
+    const durationMinutes = derivedConfig[mode].minutes;
     try {
       const saved = await sessionsApi.create({ taskId: selectedTaskId ?? undefined, durationMinutes, startedAt, completedAt });
       setSessions((prev) => [saved, ...prev]);
@@ -430,7 +442,7 @@ export default function FocusTimerPage() {
   }
 
   // ── SVG ring ──
-  const totalSeconds = MODE_CONFIG[mode].minutes * 60;
+  const totalSeconds = derivedConfig[mode].minutes * 60;
   const RADIUS = 88;
   const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
   const dashOffset = CIRCUMFERENCE * (1 - secondsLeft / totalSeconds);
@@ -473,7 +485,7 @@ export default function FocusTimerPage() {
             {(["focus", "short", "long"] as Mode[]).map((m) => (
               <Button key={m} variant={mode === m ? "default" : "outline"} size="sm" onClick={() => switchMode(m)}>
                 {m === "focus" ? <Brain className="mr-1.5 h-3.5 w-3.5" /> : <Coffee className="mr-1.5 h-3.5 w-3.5" />}
-                {MODE_CONFIG[m].label}
+                {derivedConfig[m].label}
               </Button>
             ))}
           </div>
@@ -486,12 +498,12 @@ export default function FocusTimerPage() {
                 cx="110" cy="110" r={RADIUS} stroke="currentColor" strokeWidth="8" fill="transparent"
                 strokeDasharray={CIRCUMFERENCE} strokeDashoffset={dashOffset}
                 strokeLinecap="round"
-                className={`transition-all duration-1000 ${MODE_CONFIG[mode].color}`}
+                className={`transition-all duration-1000 ${derivedConfig[mode].color}`}
               />
             </svg>
             <div className="absolute flex flex-col items-center select-none">
               <span className="text-xs uppercase tracking-widest text-muted-foreground font-semibold mb-1">
-                {MODE_CONFIG[mode].label}
+                {derivedConfig[mode].label}
               </span>
               <span className="text-5xl font-bold tabular-nums tracking-tight">{fmt(secondsLeft)}</span>
               {selectedTask && (

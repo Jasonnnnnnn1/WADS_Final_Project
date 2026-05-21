@@ -268,3 +268,16 @@ export const aiApi = {
 export const analyticsApi = {
   get: () => apiFetch<AnalyticsResponse>("/api/analytics"),
 };
+
+export type UserSettingsPayload = {
+  notificationRules?: Record<string, unknown>;
+  calendarPreferences?: Record<string, unknown>;
+  focusTimerDefaults?: Record<string, unknown>;
+  privacyControls?: Record<string, unknown>;
+  appearanceSettings?: Record<string, unknown>;
+};
+
+export const settingsApi = {
+  get: () => apiFetch<UserSettingsPayload>("/api/settings"),
+  update: (payload: UserSettingsPayload) => apiFetch<UserSettingsPayload>("/api/settings", { method: "PUT", body: JSON.stringify(payload) }),
+};

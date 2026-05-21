@@ -353,7 +353,7 @@ export default function DashboardPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="text-base">Burnout Check</CardTitle>
-                <CardDescription>Groq checks your workload and suggests break time.</CardDescription>
+                <CardDescription>Jessalyne checks your workload and suggests break time.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-sm">
                 {burnoutRisk ? (
@@ -366,7 +366,7 @@ export default function DashboardPage() {
                     ))}
                   </>
                 ) : (
-                  <p className="text-muted-foreground">Burnout analysis will appear here after Groq runs.</p>
+                  <p className="text-muted-foreground">Burnout analysis will appear here after Jessalyne runs.</p>
                 )}
               </CardContent>
             </Card>

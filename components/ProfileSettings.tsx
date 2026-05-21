@@ -5,19 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AlertCircle, CheckCircle2, Eye, EyeOff, Save, ShieldAlert, Trash2, Upload } from "lucide-react";
-import {
-  EmailAuthProvider,
-  fetchSignInMethodsForEmail,
-  onAuthStateChanged,
-  reauthenticateWithCredential,
-  signOut,
-  updatePassword,
-} from "firebase/auth";
+import { AlertCircle, CheckCircle2, Save, Trash2, Upload } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { accountApi, profileApi, type UpdateProfileInput } from "@/lib/api-client";
+import { profileApi, type UpdateProfileInput } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9._-]{3,30}$/;
@@ -26,8 +18,6 @@ type UsernameAvailability = "idle" | "checking" | "available" | "taken" | "inval
 
 type ProfileForm = UpdateProfileInput & {
   email: string;
-  focusTimerSounds: boolean;
-  weeklyActivityReport: boolean;
 };
 
 const INITIAL_FORM: ProfileForm = {
@@ -38,8 +28,6 @@ const INITIAL_FORM: ProfileForm = {
   university: "",
   major: "",
   profilePhotoUrl: null,
-  focusTimerSounds: true,
-  weeklyActivityReport: false,
 };
 
 export default function ProfileSettings() {
@@ -53,18 +41,6 @@ export default function ProfileSettings() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  const [passwordLoading, setPasswordLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordSuccess, setPasswordSuccess] = useState("");
-  const [deleteError, setDeleteError] = useState("");
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [imageError, setImageError] = useState("");
   const [usernameAvailability, setUsernameAvailability] = useState<UsernameAvailability>("idle");
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -94,8 +70,6 @@ export default function ProfileSettings() {
           university: profile.university ?? "",
           major: profile.major ?? "",
           profilePhotoUrl: profile.profilePhotoUrl ?? user.photoURL ?? null,
-          focusTimerSounds: true,
-          weeklyActivityReport: false,
         };
 
         setForm(nextForm);
@@ -220,88 +194,6 @@ export default function ProfileSettings() {
       }
     } finally {
       setSaving(false);
-    }
-  };
-
-  const handleChangePassword = async () => {
-    setPasswordError("");
-    setPasswordSuccess("");
-
-    const user = auth.currentUser;
-    if (!user || !user.email) {
-      setPasswordError("You must be signed in to change password.");
-      return;
-    }
-
-    if (!currentPassword.trim()) {
-      setPasswordError("Current password is required.");
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setPasswordError("New password must be at least 6 characters.");
-      return;
-    }
-
-    if (newPassword !== confirmNewPassword) {
-      setPasswordError("New password and confirmation do not match.");
-      return;
-    }
-
-    setPasswordLoading(true);
-    try {
-      const signInMethods = await fetchSignInMethodsForEmail(auth, user.email);
-      if (!signInMethods.includes("password")) {
-        setPasswordError("This account uses Google sign-in. Password changes are not available here.");
-        return;
-      }
-
-      const credential = EmailAuthProvider.credential(user.email, currentPassword);
-      await reauthenticateWithCredential(user, credential);
-      await updatePassword(user, newPassword);
-
-      setCurrentPassword("");
-      setNewPassword("");
-      setConfirmNewPassword("");
-      setPasswordSuccess("Password changed successfully.");
-    } catch (changeError: unknown) {
-      if (changeError instanceof Error && changeError.message) {
-        if (changeError.message.includes("auth/wrong-password") || changeError.message.includes("invalid-credential")) {
-          setPasswordError("Current password is incorrect.");
-        } else if (changeError.message.includes("auth/requires-recent-login")) {
-          setPasswordError("Please sign in again and retry password change.");
-        } else {
-          setPasswordError("Failed to change password. Please try again.");
-        }
-      } else {
-        setPasswordError("Failed to change password. Please try again.");
-      }
-    } finally {
-      setPasswordLoading(false);
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    setDeleteError("");
-
-    if (deleteConfirmation.trim().toUpperCase() !== "DELETE") {
-      setDeleteError("Type DELETE to confirm account deletion.");
-      return;
-    }
-
-    setDeleteLoading(true);
-    try {
-      await accountApi.remove();
-      await signOut(auth);
-      router.replace("/");
-    } catch (deleteAccountError) {
-      if (deleteAccountError instanceof Error && deleteAccountError.message) {
-        setDeleteError(deleteAccountError.message);
-      } else {
-        setDeleteError("Failed to delete account. Please try again.");
-      }
-    } finally {
-      setDeleteLoading(false);
     }
   };
 
@@ -496,139 +388,7 @@ export default function ProfileSettings() {
         </div>
       </div>
 
-      {/* Preferences Section */}
-      <div className="space-y-4 pt-4 border-t">
-        <h3 className="text-lg font-medium">App Preferences</h3>
-        
-        <div className="flex items-center justify-between rounded-lg border p-4 shadow-sm bg-card">
-          <div className="space-y-0.5">
-            <Label className="text-base">Focus Timer Sounds</Label>
-            <p className="text-sm text-muted-foreground">Play a chime when a focus session ends.</p>
-          </div>
-          <Switch
-            checked={form.focusTimerSounds}
-            onCheckedChange={(checked) => setForm((prev) => ({ ...prev, focusTimerSounds: checked }))}
-          />
-        </div>
-
-        <div className="flex items-center justify-between rounded-lg border p-4 shadow-sm bg-card">
-          <div className="space-y-0.5">
-            <Label className="text-base">Weekly Activity Report</Label>
-            <p className="text-sm text-muted-foreground">Receive an email summary of your completed tasks.</p>
-          </div>
-          <Switch
-            checked={form.weeklyActivityReport}
-            onCheckedChange={(checked) => setForm((prev) => ({ ...prev, weeklyActivityReport: checked }))}
-          />
-        </div>
-      </div>
-
-      <div className="space-y-4 pt-4 border-t">
-        <h3 className="text-lg font-medium">Security</h3>
-
-        <div className="rounded-lg border bg-card p-4 shadow-sm space-y-4">
-          <div>
-            <h4 className="text-sm font-semibold text-foreground">Change Password</h4>
-            <p className="text-xs text-muted-foreground mt-1">Update your account password for email sign-in.</p>
-          </div>
-
-          <div className="grid gap-4 lg:grid-cols-3 min-w-0">
-            <div className="space-y-2">
-              <Label htmlFor="currentPassword">Current Password</Label>
-              <div className="relative">
-                <Input
-                  id="currentPassword"
-                  type={showCurrentPassword ? "text" : "password"}
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowCurrentPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  aria-label={showCurrentPassword ? "Hide current password" : "Show current password"}
-                >
-                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="newPassword">New Password</Label>
-              <div className="relative">
-                <Input
-                  id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  aria-label={showNewPassword ? "Hide new password" : "Show new password"}
-                >
-                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="confirmNewPassword">Confirm New Password</Label>
-              <div className="relative">
-                <Input
-                  id="confirmNewPassword"
-                  type={showConfirmNewPassword ? "text" : "password"}
-                  value={confirmNewPassword}
-                  onChange={(e) => setConfirmNewPassword(e.target.value)}
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmNewPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                  aria-label={showConfirmNewPassword ? "Hide confirm password" : "Show confirm password"}
-                >
-                  {showConfirmNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <Button onClick={handleChangePassword} disabled={passwordLoading}>
-            {passwordLoading ? "Updating Password..." : "Change Password"}
-          </Button>
-          {passwordError && <p className="text-xs text-red-600">{passwordError}</p>}
-          {passwordSuccess && <p className="text-xs text-green-600">{passwordSuccess}</p>}
-        </div>
-
-        <div className="rounded-lg border border-red-200 bg-red-50 p-4 shadow-sm space-y-4">
-          <div className="flex items-center gap-2 text-red-700">
-            <ShieldAlert className="h-4 w-4" />
-            <h4 className="text-sm font-semibold">Delete Account</h4>
-          </div>
-          <p className="text-xs text-red-700/90">
-            This action is permanent. Your profile, tasks, and focus sessions will be removed.
-          </p>
-
-          <div className="space-y-2 max-w-xs">
-            <Label htmlFor="deleteConfirmation">Type DELETE to confirm</Label>
-            <Input
-              id="deleteConfirmation"
-              value={deleteConfirmation}
-              onChange={(e) => setDeleteConfirmation(e.target.value)}
-              placeholder="DELETE"
-            />
-          </div>
-
-          <Button variant="destructive" onClick={handleDeleteAccount} disabled={deleteLoading}>
-            {deleteLoading ? "Deleting Account..." : "Delete Account"}
-          </Button>
-          {deleteError && <p className="text-xs text-red-700">{deleteError}</p>}
-        </div>
-      </div>
+      {/* Preferences & Security moved to dedicated tabs */}
 
       <Button
         className="bg-indigo-600 hover:bg-indigo-700"
