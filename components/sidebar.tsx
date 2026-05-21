@@ -122,12 +122,14 @@ export default function Sidebar() {
         
         {/* Added Settings Button Here */}
         <Button 
-          variant={pathname === '/settings' ? 'secondary' : 'ghost'} 
+          variant={pathname?.startsWith('/settings') ? 'secondary' : 'ghost'} 
           className="w-full justify-start text-muted-foreground mb-1"
           onClick={() => router.push('/settings')}
         >
           <Settings className="mr-2 h-4 w-4" /> Settings
         </Button>
+
+        {/* compact sidebar: single Settings entry only */}
 
         {/* 3. The Toggle Button */}
         <Button 
