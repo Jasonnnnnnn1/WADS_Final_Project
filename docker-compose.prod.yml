@@ -20,4 +20,4 @@ services:
     env_file:
       - .env
     ports:
-      - "3005:3000"
+      - "3000:3000"
