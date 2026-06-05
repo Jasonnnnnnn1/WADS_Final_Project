@@ -275,6 +275,7 @@ export type UserSettingsPayload = {
   focusTimerDefaults?: Record<string, unknown>;
   privacyControls?: Record<string, unknown>;
   appearanceSettings?: Record<string, unknown>;
+  aiPreferences?: Record<string, unknown>;
 };
 
 export const settingsApi = {

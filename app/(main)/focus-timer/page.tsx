@@ -329,9 +329,9 @@ export default function FocusTimerPage() {
     const { settings } = useUserSettings();
 
     const [mode, setMode] = React.useState<Mode>("focus");
-    const initialFocus = settings?.focusTimerDefaults?.focus ?? MODE_CONFIG.focus.minutes;
-    const initialShort = settings?.focusTimerDefaults?.short ?? MODE_CONFIG.short.minutes;
-    const initialLong = settings?.focusTimerDefaults?.long ?? MODE_CONFIG.long.minutes;
+    const initialFocus = typeof settings?.focusTimerDefaults?.focus === "number" ? settings.focusTimerDefaults.focus : MODE_CONFIG.focus.minutes;
+    const initialShort = typeof settings?.focusTimerDefaults?.short === "number" ? settings.focusTimerDefaults.short : MODE_CONFIG.short.minutes;
+    const initialLong = typeof settings?.focusTimerDefaults?.long === "number" ? settings.focusTimerDefaults.long : MODE_CONFIG.long.minutes;
     const derivedConfig = React.useMemo(() => ({
       focus: { ...MODE_CONFIG.focus, minutes: initialFocus },
       short: { ...MODE_CONFIG.short, minutes: initialShort },

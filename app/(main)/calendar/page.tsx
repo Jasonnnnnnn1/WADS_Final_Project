@@ -40,7 +40,7 @@ export default function CalendarPage() {
   const router = useRouter();
   const { settings } = useUserSettings();
   const defaultView = settings?.calendarPreferences?.defaultView ?? "week";
-  const defaultWeekStart = settings?.calendarPreferences?.weekStartsOn ?? 1;
+  const defaultWeekStart = (settings?.calendarPreferences?.weekStartsOn as 0 | 1 | 2 | 3 | 4 | 5 | 6) ?? 1;
   const [view, setView] = React.useState<CalendarView>(defaultView as CalendarView);
   const [currentDate, setCurrentDate] = React.useState(new Date());
   const [tasks, setTasks] = React.useState<Task[]>([]);

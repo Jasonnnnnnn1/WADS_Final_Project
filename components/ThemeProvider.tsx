@@ -22,7 +22,7 @@ function SettingsBootstrap() {
         if (!mounted || !s) return;
         // Apply theme if present
         const theme = s.appearanceSettings?.theme;
-        if (theme) setTheme(theme);
+        if (typeof theme === "string") setTheme(theme);
 
         // Reduced motion
         const reduced = Boolean(s.appearanceSettings?.reducedMotion === true);
