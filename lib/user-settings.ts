@@ -3,10 +3,10 @@
 import * as React from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { settingsApi } from "@/lib/api-client";
+import { settingsApi, type UserSettingsPayload } from "@/lib/api-client";
 
 export function useUserSettings() {
-  const [settings, setSettings] = React.useState<any | null>(null);
+  const [settings, setSettings] = React.useState<UserSettingsPayload | null>(null);
   const [loading, setLoading] = React.useState(true);
 
   const reload = React.useCallback(async () => {

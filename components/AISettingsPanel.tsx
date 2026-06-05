@@ -74,7 +74,7 @@ export default function AISettingsPanel() {
               <Sparkles className="h-4 w-4 text-indigo-600" /> AI Preferences
             </h3>
             <p className="text-sm text-muted-foreground mt-1">
-              Tune Jessalyne's tone, response length, and study style for this browser session.
+              Tune Jessalyne&apos;s tone, response length, and study style for this browser session.
             </p>
           </div>
             {!isLocalOnly ? null : <Badge variant="outline">Local only</Badge>}

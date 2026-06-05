@@ -48,8 +48,8 @@ export default function SecuritySettings() {
       await updatePassword(user, newPassword);
       setCurrentPassword(""); setNewPassword(""); setConfirmNewPassword("");
       setPasswordSuccess("Password changed successfully.");
-    } catch (err:any) {
-      const msg = err?.message ?? String(err);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
       if (msg.includes("wrong-password") || msg.includes("invalid-credential")) {
         setPasswordError("Current password is incorrect.");
       } else if (msg.includes("requires-recent-login")) {
@@ -68,8 +68,9 @@ export default function SecuritySettings() {
       await accountApi.remove();
       await signOut(auth);
       // client will redirect after sign-out elsewhere
-    } catch (err:any) {
-      setDeleteError(err?.message ?? "Failed to delete account. Please try again.");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to delete account. Please try again.";
+      setDeleteError(msg);
     } finally { setDeleteLoading(false); }
   }
 

@@ -8,12 +8,39 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { settingsApi } from "@/lib/api-client";
 
+interface UserSettings {
+  notificationRules: {
+    enabled: boolean;
+    dailyReminder: boolean;
+    reminderTime: string;
+    channels: string[];
+  };
+  calendarPreferences: {
+    defaultView: string;
+    weekStart: number;
+  };
+  focusTimerDefaults: {
+    focus: number;
+    shortBreak: number;
+    longBreak: number;
+  };
+  privacyControls: {
+    allowDataExport: boolean;
+    dataRetentionDays: number;
+  };
+  appearanceSettings: {
+    theme: string;
+    density: string;
+    reducedMotion: boolean;
+  };
+}
+
 export default function NotificationsSettings() {
   const { setTheme } = useTheme();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
-  const [config, setConfig] = useState<any>({
+  const [config, setConfig] = useState<UserSettings>({
     notificationRules: { enabled: false, dailyReminder: false, reminderTime: "09:00", channels: ["in-app"] },
     calendarPreferences: { defaultView: "week", weekStart: 1 },
     focusTimerDefaults: { focus: 25, shortBreak: 5, longBreak: 15 },
@@ -28,8 +55,16 @@ export default function NotificationsSettings() {
         const res = await settingsApi.get();
         if (!mounted) return;
         if (res) {
-          setConfig((prev:any) => ({ ...prev, ...res }));
-          const theme = res?.appearanceSettings?.theme;
+          setConfig((prev) => ({
+            ...prev,
+            ...res,
+            notificationRules: { ...prev.notificationRules, ...res.notificationRules },
+            calendarPreferences: { ...prev.calendarPreferences, ...res.calendarPreferences },
+            focusTimerDefaults: { ...prev.focusTimerDefaults, ...res.focusTimerDefaults },
+            privacyControls: { ...prev.privacyControls, ...res.privacyControls },
+            appearanceSettings: { ...prev.appearanceSettings, ...res.appearanceSettings },
+          } as UserSettings));
+          const theme = res?.appearanceSettings?.theme as string | undefined;
           if (theme) {
             setTheme(theme);
           }
@@ -66,13 +101,13 @@ export default function NotificationsSettings() {
           <div className="mt-3">
             <Label>Enable Notifications</Label>
             <div className="mt-2">
-              <Switch checked={!!config.notificationRules?.enabled} onCheckedChange={(v) => setConfig((c:any)=> ({ ...c, notificationRules: { ...c.notificationRules, enabled: v } }))} />
+              <Switch checked={!!config.notificationRules?.enabled} onCheckedChange={(v) => setConfig((c)=> ({ ...c, notificationRules: { ...c.notificationRules, enabled: v } }))} />
             </div>
             <div className="mt-3">
               <Label>Daily Reminder</Label>
               <div className="flex gap-2 mt-2 items-center">
-                <Switch checked={!!config.notificationRules?.dailyReminder} onCheckedChange={(v) => setConfig((c:any)=> ({ ...c, notificationRules: { ...c.notificationRules, dailyReminder: v } }))} />
-                <Input value={config.notificationRules?.reminderTime ?? "09:00"} onChange={(e)=> setConfig((c:any)=> ({ ...c, notificationRules: { ...c.notificationRules, reminderTime: e.target.value } }))} type="time" />
+                <Switch checked={!!config.notificationRules?.dailyReminder} onCheckedChange={(v) => setConfig((c)=> ({ ...c, notificationRules: { ...c.notificationRules, dailyReminder: v } }))} />
+                <Input value={config.notificationRules?.reminderTime ?? "09:00"} onChange={(e)=> setConfig((c)=> ({ ...c, notificationRules: { ...c.notificationRules, reminderTime: e.target.value } }))} type="time" />
               </div>
             </div>
           </div>
@@ -82,14 +117,14 @@ export default function NotificationsSettings() {
           <h3 className="font-semibold">Calendar</h3>
           <div className="mt-3">
             <Label>Default View</Label>
-            <select className="mt-2 w-full" value={config.calendarPreferences?.defaultView} onChange={(e)=> setConfig((c:any)=> ({ ...c, calendarPreferences: { ...c.calendarPreferences, defaultView: e.target.value } }))}>
+            <select className="mt-2 w-full" value={config.calendarPreferences?.defaultView} onChange={(e)=> setConfig((c)=> ({ ...c, calendarPreferences: { ...c.calendarPreferences, defaultView: e.target.value } }))}>
               <option value="day">Day</option>
               <option value="week">Week</option>
               <option value="month">Month</option>
             </select>
             <div className="mt-3">
               <Label>Week Start</Label>
-              <select className="mt-2 w-full" value={config.calendarPreferences?.weekStart} onChange={(e)=> setConfig((c:any)=> ({ ...c, calendarPreferences: { ...c.calendarPreferences, weekStart: Number(e.target.value) } }))}>
+              <select className="mt-2 w-full" value={config.calendarPreferences?.weekStart} onChange={(e)=> setConfig((c)=> ({ ...c, calendarPreferences: { ...c.calendarPreferences, weekStart: Number(e.target.value) } }))}>
                 <option value={0}>Sunday</option>
                 <option value={1}>Monday</option>
               </select>
@@ -102,9 +137,9 @@ export default function NotificationsSettings() {
         <div className="rounded-lg border bg-card p-4">
           <h3 className="font-semibold">Focus Timer Defaults</h3>
           <div className="mt-3 grid grid-cols-3 gap-2">
-            <Input value={config.focusTimerDefaults?.focus} onChange={(e)=> setConfig((c:any)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, focus: Number(e.target.value) } }))} />
-            <Input value={config.focusTimerDefaults?.shortBreak} onChange={(e)=> setConfig((c:any)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, shortBreak: Number(e.target.value) } }))} />
-            <Input value={config.focusTimerDefaults?.longBreak} onChange={(e)=> setConfig((c:any)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, longBreak: Number(e.target.value) } }))} />
+            <Input value={config.focusTimerDefaults?.focus} onChange={(e)=> setConfig((c)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, focus: Number(e.target.value) } }))} />
+            <Input value={config.focusTimerDefaults?.shortBreak} onChange={(e)=> setConfig((c)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, shortBreak: Number(e.target.value) } }))} />
+            <Input value={config.focusTimerDefaults?.longBreak} onChange={(e)=> setConfig((c)=> ({ ...c, focusTimerDefaults: { ...c.focusTimerDefaults, longBreak: Number(e.target.value) } }))} />
           </div>
         </div>
 
@@ -112,10 +147,10 @@ export default function NotificationsSettings() {
           <h3 className="font-semibold">Privacy</h3>
           <div className="mt-3">
             <Label>Allow Data Export</Label>
-            <div className="mt-2"><Switch checked={!!config.privacyControls?.allowDataExport} onCheckedChange={(v)=> setConfig((c:any)=> ({ ...c, privacyControls: { ...c.privacyControls, allowDataExport: v } }))} /></div>
+            <div className="mt-2"><Switch checked={!!config.privacyControls?.allowDataExport} onCheckedChange={(v)=> setConfig((c)=> ({ ...c, privacyControls: { ...c.privacyControls, allowDataExport: v } }))} /></div>
             <div className="mt-3">
               <Label>Data Retention (days)</Label>
-              <Input value={config.privacyControls?.dataRetentionDays} onChange={(e)=> setConfig((c:any)=> ({ ...c, privacyControls: { ...c.privacyControls, dataRetentionDays: Number(e.target.value) } }))} />
+              <Input value={config.privacyControls?.dataRetentionDays} onChange={(e)=> setConfig((c)=> ({ ...c, privacyControls: { ...c.privacyControls, dataRetentionDays: Number(e.target.value) } }))} />
             </div>
           </div>
         </div>
@@ -130,14 +165,14 @@ export default function NotificationsSettings() {
               onChange={(e) => {
                 const theme = e.target.value;
                 setTheme(theme);
-                setConfig((c:any)=> ({ ...c, appearanceSettings: { ...c.appearanceSettings, theme } }));
+                setConfig((c)=> ({ ...c, appearanceSettings: { ...c.appearanceSettings, theme } }));
               }}
             >
               <option value="system">System</option>
               <option value="light">Light</option>
               <option value="dark">Dark</option>
             </select>
-            <div className="mt-3"><Label>Reduced Motion</Label><div className="mt-2"><Switch checked={!!config.appearanceSettings?.reducedMotion} onCheckedChange={(v)=> setConfig((c:any)=> ({ ...c, appearanceSettings: { ...c.appearanceSettings, reducedMotion: v } }))} /></div></div>
+            <div className="mt-3"><Label>Reduced Motion</Label><div className="mt-2"><Switch checked={!!config.appearanceSettings?.reducedMotion} onCheckedChange={(v)=> setConfig((c)=> ({ ...c, appearanceSettings: { ...c.appearanceSettings, reducedMotion: v } }))} /></div></div>
           </div>
         </div>
       </div>

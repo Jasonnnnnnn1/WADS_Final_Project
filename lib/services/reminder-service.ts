@@ -5,12 +5,12 @@ export async function checkDueReminders() {
   // those with a dailyReminder enabled in notificationRules. For a real
   // scheduler you'd query reminders by schedule; this is intentionally simple.
   const all = await prisma.userSettings.findMany();
-  const due: Array<{ userId: string; rules: any }> = [];
+  const due: Array<{ userId: string; rules: Record<string, unknown> }> = [];
 
   for (const s of all) {
     try {
-      const rules = s.notificationRules ?? {};
-      if (rules?.dailyReminder === true || rules?.enabled === true) {
+      const rules = (s.notificationRules as Record<string, unknown>) ?? {};
+      if (rules.dailyReminder === true || rules.enabled === true) {
         due.push({ userId: s.userId, rules });
       }
     } catch (e) {
