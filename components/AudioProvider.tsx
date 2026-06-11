@@ -325,7 +325,7 @@ function createAmbientSound(ctx: AudioContext, soundId: AmbientSoundId, output: 
 }
 
 export function AudioProvider({ children }: { children: ReactNode }) {
-  const [musicTrackId, setMusicTrackId] = useState("jfKfPfyJRdk"); // Default to Lofi Hip Hop
+  const [musicTrackId, setMusicTrackId] = useState("5jaT_8hy3Vg"); // Default to Lofi Hip Hop
   const [musicPlaying, setMusicPlaying] = useState(false);
   const [ambientVolume, setAmbientVolume] = useState(0.7);
   const [activeAmbientSounds, setActiveAmbientSounds] = useState<string[]>([]);

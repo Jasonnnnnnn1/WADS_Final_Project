@@ -27,7 +27,7 @@ const MODE_CONFIG: Record<Mode, { label: string; minutes: number; color: string 
 
 // ─── Study music tracks ───────────────────────────────────────────────────────
 const MUSIC_TRACKS = [
-  { id: "jfKfPfyJRdk", label: "Lofi Hip Hop Radio (Lofi Girl)" },
+  { id: "5jaT_8hy3Vg", label: "Lofi Hip Hop Radio (10 Hours)" },
   { id: "qYnA9wWFHLI", label: "Deep Focus — Ambient Study Music" },
   { id: "WPni755-Krg", label: "Binaural Beats — Focus 40Hz" },
 ] as const;
