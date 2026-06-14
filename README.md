@@ -382,4 +382,30 @@ Access the app at `http://localhost:3000`.
 
 ## 17. DEPLOYMENT INSTRUCTIONS
 
-...
+Our application is deployed on a private Ubuntu server which was provided by our university using a fully automated CI/CD pipeline. The deployment relies on Docker for containerization and GitHub Actions for continuous integration.
+
+### 17.1 Infrastructure & Environment Setup
+1. **Server Access:** The project is hosted via a CSBI infrastructure. We authenticated using our university credentials and accessed our private Ubuntu server environment through the web-based SSH terminal provided at csbiweb-ssh.csbihub.id.
+2. **Environment Variables:** All sensitive keys (Firebase credentials, Groq API Key, Database URL) are securely stored as a single GitHub Secret (`ENV_FILE`) in our repository settings to prevent exposing them in version control.
+3. **Firebase Authorization:** Because the app is deployed to a live domain, the domain (`e2526-wads-b4bc.csbihub.id`) was added to the **Authorized Domains** list inside the Firebase Authentication console to allow Google Sign-In outside of `localhost`.
+
+### 17.2 CI/CD Pipeline (GitHub Actions)
+1. **Self-Hosted Runner:** We installed and configured a self-hosted GitHub Actions runner directly on the Ubuntu server. 
+2. **Service Execution:** The runner is kept alive in the background using `./run.sh` to continuously listen for new commits.
+3. **Pipeline Workflow (`cicd.yml`):**
+   - Triggers automatically upon pushing to the `master` branch.
+   - Securely injects the `.env` file from GitHub Secrets.
+   - Executes deployment commands via the self-hosted runner.
+
+### 17.3 Docker & Port Configuration
+1. **Production Compose File:** We use a specific `docker-compose.prod.yml` to control the frontend/backend services.
+2. **Port Mapping:** The application is explicitly mapped to run on port `3022` (`"3022:3000"`) inside the Docker configuration to match the port specifically assigned to our project by the lecturer.
+3. **Nginx Reverse Proxy:** The university's Nginx configuration forwards external traffic from our provided domain directly to our application's local port (`3022`).
+
+### 17.4 Automated Deployment Steps
+Whenever new code is pushed to `master`, the GitHub Action automatically performs the following on the Ubuntu server:
+1. `git pull` to fetch the latest codebase.
+2. Generates the `.env` file from GitHub Secrets.
+3. `docker-compose -f docker-compose.prod.yml down` to gracefully stop the old containers.
+4. `docker-compose -f docker-compose.prod.yml up -d --build` to rebuild the images and spin up the new containers in detached mode.
+
