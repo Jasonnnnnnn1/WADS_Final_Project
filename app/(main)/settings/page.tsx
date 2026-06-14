@@ -1,17 +1,34 @@
 "use client";
 
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import ProfileSettings from "@/components/ProfileSettings";
 import AISettingsPanel from "@/components/AISettingsPanel";
 import NotificationsSettings from "@/components/NotificationsSettings";
 import SecuritySettings from "@/components/SecuritySettings";
-import { BrainCircuit, Settings, Shield, User } from "lucide-react";
+import { BrainCircuit, LogOut, Settings, Shield, User } from "lucide-react";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 export default function SettingsPage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const defaultTab = searchParams?.get("tab") ?? "profile";
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setLoggingOut(true);
+      await signOut(auth);
+      router.replace('/login');
+    } catch (err: unknown) {
+      console.error(err);
+      setLoggingOut(false);
+    }
+  };
 
   return (
     <main className="flex-1 flex flex-col h-full bg-muted/5 overflow-y-auto w-full">
@@ -83,6 +100,34 @@ export default function SettingsPage() {
             
           </div>
         </Tabs>
+
+        {/* Sign Out card — always visible, especially important on mobile where the sidebar is hidden */}
+        <div className="mt-8">
+          <Card className="shadow-sm border-muted">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </CardTitle>
+              <CardDescription>
+                Sign out of your account on this device.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                id="settings-logout-btn"
+                variant="destructive"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="flex items-center gap-2"
+              >
+                <LogOut className="h-4 w-4" />
+                {loggingOut ? "Signing out..." : "Sign Out"}
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
       </div>
     </main>
   );
