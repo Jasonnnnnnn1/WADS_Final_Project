@@ -387,6 +387,17 @@ export default function AIChatPage() {
           </p>
           <p className="mt-2 inline-flex flex-wrap items-center gap-1.5 rounded-full border bg-background px-3 py-1 text-[10px] sm:text-xs text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
+            {aiSettings.characterRoleplay !== "none" && (
+              <>
+                <span className="font-semibold text-primary/80">
+                  {aiSettings.characterRoleplay
+                    .split("_")
+                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(" ")}
+                </span>
+                <span>·</span>
+              </>
+            )}
             <span>{aiSettings.promptStyle} tone</span>
             <span>·</span>
             <span>{aiSettings.maxResponseLength} replies</span>

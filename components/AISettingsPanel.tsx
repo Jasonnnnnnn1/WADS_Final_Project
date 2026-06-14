@@ -39,6 +39,7 @@ export default function AISettingsPanel() {
 
   const handleSave = async () => {
     try {
+      saveAISettings(settings); // Sync local storage so other components can read it
       await settingsApi.update({ aiPreferences: settings });
       setSavedMessage("AI preferences saved.");
       setIsLocalOnly(false);
