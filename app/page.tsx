@@ -14,7 +14,6 @@ const spaceGrotesk = Space_Grotesk({
   weight: ["400", "500", "600", "700"],
 });
 
-// ─── Animated stat counter ─────────────────────────────────────────────────
 function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
   const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,7 +40,6 @@ function Counter({ target, suffix = "" }: { target: number; suffix?: string }) {
   return <span ref={ref}>{val.toLocaleString()}{suffix}</span>;
 }
 
-// ─── Floating geometric shapes (hero decoration) ───────────────────────────
 function Shapes() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden z-0" aria-hidden>
@@ -64,7 +62,7 @@ function Shapes() {
   );
 }
 
-// ─── Data ──────────────────────────────────────────────────────────────────
+// ─── Data ────────────────────────────────────────────────────────────────
 const features = [
   {
     icon: (
