@@ -96,6 +96,23 @@ export default function AISettingsPanel() {
           </div>
 
           <div className="space-y-2">
+            <Label>Character Roleplay</Label>
+            <Select value={settings.characterRoleplay} onValueChange={(value) => setSettings((prev) => ({ ...prev, characterRoleplay: value as AISettings["characterRoleplay"] }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Choose a character" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">None (Default Jessalyne)</SelectItem>
+                <SelectItem value="drill_sergeant">The Strict Drill Sergeant</SelectItem>
+                <SelectItem value="witty_friend">The Witty Best Friend</SelectItem>
+                <SelectItem value="cold_executive">The Cold Executive</SelectItem>
+                <SelectItem value="socratic_tutor">The Socratic Tutor</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+
+          <div className="space-y-2">
             <Label>Max response length</Label>
             <Select value={settings.maxResponseLength} onValueChange={(value) => setSettings((prev) => ({ ...prev, maxResponseLength: value as AISettings["maxResponseLength"] }))}>
               <SelectTrigger>
@@ -199,7 +216,8 @@ export default function AISettingsPanel() {
         </div>
 
         <div className="rounded-lg border bg-muted/30 p-4 text-sm text-muted-foreground space-y-1">
-          <p>Prompt style changes the tone Jessalyne uses in chat and task help.</p>
+          <p>Prompt style changes the base tone Jessalyne uses in chat and task help.</p>
+          <p>Character roleplay allows Jessalyne to adopt a fun, specific persona on top of her normal style.</p>
           <p>Max response length controls how verbose the assistant should be.</p>
           <p>Study mode shifts the assistant toward balanced planning, deep focus, or exam prep.</p>
           <p>Work hours and weekend setting guide when AI schedules your tasks.</p>

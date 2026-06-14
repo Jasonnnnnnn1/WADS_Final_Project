@@ -180,7 +180,7 @@ describe('ProfileSetupForm Component', () => {
   // ── 7. No auth — redirects to login ──────────────────────────────────────
   it('redirects to /login if no authenticated user is found', async () => {
     // Override onAuthStateChanged to return null user
-    const { onAuthStateChanged } = require('firebase/auth');
+    const { onAuthStateChanged } = await import('firebase/auth');
     (onAuthStateChanged as jest.Mock).mockImplementationOnce((_auth: unknown, cb: (u: null) => void) => {
       cb(null);
       return jest.fn();

@@ -34,6 +34,7 @@ type ChatPreferences = {
   studyMode?: "balanced" | "focus" | "exam";
   focusBlockMinutes?: number;
   breakMinutes?: number;
+  characterRoleplay?: "none" | "drill_sergeant" | "witty_friend" | "cold_executive" | "socratic_tutor";
 };
 
 const MODEL_NAME = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
@@ -358,6 +359,17 @@ Output ONLY valid JSON.
           ? 260
           : 160;
 
+    const roleplayText = 
+      preferences.characterRoleplay === "drill_sergeant"
+        ? "Adopt the persona of a Strict Drill Sergeant. Use tough love, be highly demanding, accept zero excuses, and push the user hard to stop procrastinating."
+        : preferences.characterRoleplay === "witty_friend"
+          ? "Adopt the persona of a Witty Best Friend. Be highly sarcastic, humorous, and playful, but still genuinely helpful with their tasks."
+          : preferences.characterRoleplay === "cold_executive"
+            ? "Adopt the persona of a Cold Executive Assistant. Be completely emotionless, clinical, and detached. Zero fluff, provide only facts, bullet points, and actionable steps."
+            : preferences.characterRoleplay === "socratic_tutor"
+              ? "Adopt the persona of a Socratic Tutor. Instead of giving direct answers, ask guiding questions to help the user arrive at the answer themselves."
+              : "Adopt your Default Assistant persona. Be your normal, friendly, and practical self.";
+
     const systemPrompt = `You are Jessalyne, the in-app productivity assistant for HelpImTooLazy.
 
   Persona:
@@ -372,6 +384,7 @@ Output ONLY valid JSON.
   - Do not invent account access, personal data, or external actions you cannot perform.
   - Light casual conversation is allowed when the user wants to chat for fun; keep it friendly, safe, and brief.
   - If casual chat continues for too long, gently offer to pivot back to goals or tasks.
+  - Roleplay Instruction: ${roleplayText}
   - ${promptStyleText}
   - ${studyModeText}
   - If helpful, use a study block of about ${preferences.focusBlockMinutes ?? 25} minutes with ${preferences.breakMinutes ?? 5}-minute breaks.

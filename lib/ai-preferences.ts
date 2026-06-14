@@ -1,6 +1,7 @@
 export type AIPromptStyle = "supportive" | "direct" | "minimal";
 export type AIMaxResponseLength = "short" | "medium" | "long";
 export type AIStudyMode = "balanced" | "focus" | "exam";
+export type AICharacterRoleplay = "none" | "drill_sergeant" | "witty_friend" | "cold_executive" | "socratic_tutor";
 
 export type AISettings = {
   promptStyle: AIPromptStyle;
@@ -11,6 +12,7 @@ export type AISettings = {
   workStartHour: number;
   workEndHour: number;
   allowWeekendScheduling: boolean;
+  characterRoleplay: AICharacterRoleplay;
 };
 
 export const DEFAULT_AI_SETTINGS: AISettings = {
@@ -22,6 +24,7 @@ export const DEFAULT_AI_SETTINGS: AISettings = {
   workStartHour: 10,
   workEndHour: 18,
   allowWeekendScheduling: false,
+  characterRoleplay: "none",
 };
 
 const STORAGE_KEY = "helpimtoolazy-ai-settings";
@@ -51,6 +54,7 @@ export function loadAISettings(): AISettings {
       workStartHour,
       workEndHour: Math.max(workStartHour + 2, workEndHour),
       allowWeekendScheduling: Boolean(parsed.allowWeekendScheduling),
+      characterRoleplay: isCharacterRoleplay(parsed.characterRoleplay) ? parsed.characterRoleplay : DEFAULT_AI_SETTINGS.characterRoleplay,
     };
   } catch {
     return DEFAULT_AI_SETTINGS;
@@ -70,6 +74,7 @@ export function saveAISettings(settings: AISettings) {
       clampNumber(settings.workEndHour, 12, 23, DEFAULT_AI_SETTINGS.workEndHour)
     ),
     allowWeekendScheduling: Boolean(settings.allowWeekendScheduling),
+    characterRoleplay: isCharacterRoleplay(settings.characterRoleplay) ? settings.characterRoleplay : DEFAULT_AI_SETTINGS.characterRoleplay,
   };
 
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
@@ -92,6 +97,10 @@ function isMaxResponseLength(value: unknown): value is AIMaxResponseLength {
 
 function isStudyMode(value: unknown): value is AIStudyMode {
   return value === "balanced" || value === "focus" || value === "exam";
+}
+
+function isCharacterRoleplay(value: unknown): value is AICharacterRoleplay {
+  return value === "none" || value === "drill_sergeant" || value === "witty_friend" || value === "cold_executive" || value === "socratic_tutor";
 }
 
 function clampNumber(value: unknown, min: number, max: number, fallback: number) {

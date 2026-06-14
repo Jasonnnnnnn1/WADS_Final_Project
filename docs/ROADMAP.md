@@ -1,4 +1,4 @@
-﻿# HelpImTooLazy Roadmap To-Do List
+# HelpImTooLazy Roadmap To-Do List
 
 Based on `README.md` requirements and declared stack:
 - Frontend: Next.js (App Router)
@@ -116,8 +116,8 @@ Based on `README.md` requirements and declared stack:
 - [x] Update README with accurate run/setup instructions
 - [x] Document API endpoints with request/response examples — Swagger UI at `/api-docs`
 - [x] Document architecture decisions and threat/security controls — in `docs/SECURITY_IMPLEMENTATION.md` and `docs/ENGINEERING_STANDARDS.md`
-- [ ] Prepare demo script (feature flow + technical explanation)
-- [ ] Prepare final submission checklist (code, docs, evidence, test results)
+- [x] Prepare demo script (feature flow + technical explanation)
+- [x] Prepare final submission checklist (code, docs, evidence, test results)
 ## Impromptu Additions (Features Added Beyond Original Roadmap)
 
 ### User Experience Enhancements
@@ -141,6 +141,7 @@ Based on `README.md` requirements and declared stack:
 
 ### Settings & Preferences
 - [x] **AI Preferences Tab** — Prompt style, response length, and study-mode preferences
+- [x] **AI Character Roleplay Setting** — Jessalyne can adopt specific personas (Drill Sergeant, Witty Friend, etc.) on top of her normal style.
 - [x] **Notification Settings Tab** — Placeholder for notification preferences
 - [x] **Security Settings Tab** — Password change and account deletion controls
 - [x] **Account Deletion** — Complete user account removal with cascading data deletion
@@ -207,7 +208,6 @@ Based on `README.md` requirements and declared stack:
 
 ## Milestone Progress Summary
 
-✅ **Completed** — Phases 0–10 (foundation, auth, API, DB, scheduling, timer, dashboard, security hardening, UX/API hardening, testing & quality, containerization)
-🔄 **In Progress** — Phase 11 (documentation and deployment automation)
-⏳ **Planned** — Production deployment and post-deploy smoke tests (automation + CI)
+✅ **Completed** — Phases 0–11 (foundation, auth, API, DB, scheduling, timer, dashboard, security hardening, UX/API hardening, testing & quality, containerization, documentation, and final delivery)
+✅ **Completed** — Production deployment and post-deploy smoke tests (automation + CI)
 📋 **Backlog** — Phases 12–14 (optional post-delivery enhancements)
