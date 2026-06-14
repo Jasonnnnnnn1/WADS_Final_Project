@@ -279,7 +279,7 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ### 11.3 Live Application URL
 
-[https://helpimtoolazy.com](http://e2526-wads-b4bc.csbihub.id)]
+[https://helpimtoolazy.com](http://e2526-wads-b4bc.csbihub.id)
 
 ## 12. GitHub Contribution Summary (INDIVIDUAL)
 
