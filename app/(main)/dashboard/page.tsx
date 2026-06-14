@@ -10,10 +10,13 @@ import { Calendar } from "@/components/ui/calendar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
-  RefreshCw, Play, Settings, CheckCircle, Clock, BrainCircuit, AlertCircle, Circle, Loader2, Flame, TrendingUp, MoreVertical
+  RefreshCw, Play, Settings, CheckCircle, Clock, BrainCircuit, AlertCircle, Circle, Loader2, Flame, TrendingUp, MoreVertical,
+  Plus, ChevronDown, ChevronUp, Target, MessageSquare, Zap
 } from "lucide-react";
 import { analyticsApi, profileApi, tasksApi, type AnalyticsResponse, type Task } from "@/lib/api-client";
 import { aiApi } from "@/lib/api-client";
+import { isToday, isPast } from "date-fns";
+import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/lib/firebase";
@@ -42,6 +45,8 @@ export default function DashboardPage() {
   const [aiLoading, setAiLoading] = React.useState(false);
   const [cardGradient, setCardGradient] = React.useState("from-blue-600 to-indigo-600");
   const [customColor, setCustomColor] = React.useState<string | null>(null);
+  const [quickCaptureTitle, setQuickCaptureTitle] = React.useState("");
+  const [aiCardsOpen, setAiCardsOpen] = React.useState(true);
 
   React.useEffect(() => {
     const saved = localStorage.getItem("dashboardGreetingColor");
@@ -138,14 +143,43 @@ export default function DashboardPage() {
     setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
   }
 
+  async function handleQuickCapture(e: React.FormEvent) {
+    e.preventDefault();
+    if (!quickCaptureTitle.trim()) return;
+    const now = new Date();
+    const end = new Date();
+    end.setHours(end.getHours() + 1);
+    const newTask = await tasksApi.create({
+      title: quickCaptureTitle,
+      startTime: now.toISOString(),
+      endTime: end.toISOString(),
+      priority: "medium",
+      status: "pending",
+      description: "",
+      category: "",
+      course: ""
+    });
+    setTasks(prev => [...prev, newTask]);
+    setQuickCaptureTitle("");
+  }
+
   const urgentTasks = tasks.filter((t) => t.priority === "urgent" && t.status !== "completed");
   const incompleteTasks = tasks.filter((t) => t.status !== "completed");
   const completedTasks = tasks.filter((t) => t.status === "completed");
+
+  const dueTodayTasks = incompleteTasks.filter(t => isToday(new Date(t.endTime)));
+  const overdueTasks = incompleteTasks.filter(t => isPast(new Date(t.endTime)) && !isToday(new Date(t.endTime)));
+  const completedTodayTasks = completedTasks.filter(t => isToday(new Date(t.updatedAt)));
+  const dailyCompletionPercent = (completedTodayTasks.length + dueTodayTasks.length) > 0 
+    ? Math.round((completedTodayTasks.length / (completedTodayTasks.length + dueTodayTasks.length)) * 100)
+    : 0;
+  const nextPlannedTask = incompleteTasks.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime())[0];
 
   const taskGroups: Record<string, Task[]> = {
     urgent: urgentTasks,
     incomplete: incompleteTasks,
     completed: completedTasks,
+    overdue: overdueTasks,
   };
 
   const renderTaskContent = (key: string, emptyMessage: string) => {
@@ -270,107 +304,154 @@ export default function DashboardPage() {
             </div>
           </div>
 
+          <div className="flex flex-col md:flex-row gap-3">
+            <Button onClick={() => router.push('/tasks')} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white border-0">
+              <Plus className="w-4 h-4 mr-2" /> Add Task
+            </Button>
+            <Button onClick={() => router.push('/focus-timer')} variant="outline" className="flex-1">
+              <Target className="w-4 h-4 mr-2 text-blue-600" /> Focus Timer
+            </Button>
+            <Button onClick={() => router.push('/ai-plan')} variant="outline" className="flex-1">
+              <Zap className="w-4 h-4 mr-2 text-amber-500" /> AI Plan
+            </Button>
+            <form onSubmit={handleQuickCapture} className="flex-[2] min-w-[200px] flex gap-2">
+              <Input 
+                placeholder="Quick capture task..." 
+                value={quickCaptureTitle}
+                onChange={e => setQuickCaptureTitle(e.target.value)}
+                className="bg-background"
+              />
+              <Button type="submit" variant="secondary">Save</Button>
+            </form>
+          </div>
+
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard icon={<AlertCircle className="text-red-500 h-5 w-5" />} title="Urgent" value={String(urgentTasks.length)} subtext="Need attention" />
-            <StatCard icon={<Clock className="text-amber-500 h-5 w-5" />} title="Incomplete" value={String(incompleteTasks.length)} subtext="Pending tasks" />
-            <StatCard icon={<CheckCircle className="text-green-500 h-5 w-5" />} title="Completed" value={String(completedTasks.length)} subtext="Done" />
-            <StatCard icon={<BrainCircuit className="text-indigo-500 h-5 w-5" />} title="Total" value={String(tasks.length)} subtext="All tasks" />
+            <StatCard icon={<AlertCircle className="text-red-500 h-5 w-5" />} title="Due Today" value={String(dueTodayTasks.length)} subtext="Tasks ending today" />
+            <StatCard icon={<Flame className="text-amber-500 h-5 w-5" />} title="Urgent" value={String(urgentTasks.length)} subtext="Needs attention" />
+            <StatCard icon={<CheckCircle className="text-green-500 h-5 w-5" />} title="Completion" value={`${dailyCompletionPercent}%`} subtext="Daily progress" />
+            <StatCard icon={<Clock className="text-blue-500 h-5 w-5" />} title="Up Next" value={nextPlannedTask ? "1" : "0"} subtext={nextPlannedTask ? (nextPlannedTask.title.length > 15 ? nextPlannedTask.title.substring(0, 15) + '...' : nextPlannedTask.title) : "No tasks"} />
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2"><Flame className="h-4 w-4 text-orange-500" /> Focus Streak</CardTitle>
-                <CardDescription>Shows how consistently you have been logging focus time.</CardDescription>
-              </CardHeader>
-              <CardContent className="grid grid-cols-2 gap-4 text-sm">
-                <div className="rounded-lg border bg-muted/30 p-4">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wide">Current</p>
-                  <p className="text-3xl font-bold tabular-nums">{analytics?.streak.current ?? 0}</p>
-                  <p className="text-xs text-muted-foreground">days</p>
-                </div>
-                <div className="rounded-lg border bg-muted/30 p-4">
-                  <p className="text-muted-foreground text-xs uppercase tracking-wide">Longest</p>
-                  <p className="text-3xl font-bold tabular-nums">{analytics?.streak.longest ?? 0}</p>
-                  <p className="text-xs text-muted-foreground">days</p>
-                </div>
-                <div className="col-span-2 text-xs text-muted-foreground">
-                  {analytics?.streak.active
-                    ? "You have an active streak going. Keep the chain alive."
-                    : "No active streak right now. One small session starts the next one."}
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base flex items-center gap-2"><TrendingUp className="h-4 w-4 text-blue-500" /> Monthly Trend</CardTitle>
-                <CardDescription>Monthly focus minutes and completed-task trend.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {(analytics?.trends ?? []).length > 0 ? (
-                  analytics!.trends.map((month) => {
-                    const maxMinutes = Math.max(...analytics!.trends.map((item) => item.focusMinutes), 1);
-                    const width = `${Math.max(8, Math.round((month.focusMinutes / maxMinutes) * 100))}%`;
-                    return (
-                      <div key={month.month} className="space-y-1">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{month.label}</span>
-                          <span>{month.focusMinutes} min · {month.completedTasks} completed</span>
-                        </div>
-                        <div className="h-2 rounded-full bg-muted overflow-hidden">
-                          <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{ width }} />
-                        </div>
+          <div className="space-y-4">
+            <Button variant="ghost" onClick={() => setAiCardsOpen(!aiCardsOpen)} className="w-full justify-between hover:bg-muted/50 p-4 h-auto text-lg font-semibold border rounded-xl bg-card shadow-sm">
+              <span className="flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-indigo-500" /> Insights & Trends</span>
+              {aiCardsOpen ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+            </Button>
+            
+            {aiCardsOpen && (
+              <div className="space-y-4 animate-in slide-in-from-top-2 fade-in duration-200">
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2"><Flame className="h-4 w-4 text-orange-500" /> Focus Streak</CardTitle>
+                      <CardDescription>Shows how consistently you have been logging focus time.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid grid-cols-2 gap-4 text-sm">
+                      <div className="rounded-lg border bg-muted/30 p-4">
+                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Current</p>
+                        <p className="text-3xl font-bold tabular-nums">{analytics?.streak.current ?? 0}</p>
+                        <p className="text-xs text-muted-foreground">days</p>
                       </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-sm text-muted-foreground">Monthly trend data will appear after a few focus sessions.</p>
-                )}
-              </CardContent>
-            </Card>
+                      <div className="rounded-lg border bg-muted/30 p-4">
+                        <p className="text-muted-foreground text-xs uppercase tracking-wide">Longest</p>
+                        <p className="text-3xl font-bold tabular-nums">{analytics?.streak.longest ?? 0}</p>
+                        <p className="text-xs text-muted-foreground">days</p>
+                      </div>
+                      <div className="col-span-2 text-xs text-muted-foreground">
+                        {analytics?.streak.active
+                          ? "You have an active streak going. Keep the chain alive."
+                          : "No active streak right now. One small session starts the next one."}
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base flex items-center gap-2"><TrendingUp className="h-4 w-4 text-blue-500" /> Monthly Trend</CardTitle>
+                      <CardDescription>Monthly focus minutes and completed-task trend.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {(analytics?.trends ?? []).length > 0 ? (
+                        analytics!.trends.map((month) => {
+                          const maxMinutes = Math.max(...analytics!.trends.map((item) => item.focusMinutes), 1);
+                          const width = `${Math.max(8, Math.round((month.focusMinutes / maxMinutes) * 100))}%`;
+                          return (
+                            <div key={month.month} className="space-y-1">
+                              <div className="flex items-center justify-between text-xs text-muted-foreground">
+                                <span>{month.label}</span>
+                                <span>{month.focusMinutes} min · {month.completedTasks} completed</span>
+                              </div>
+                              <div className="h-2 rounded-full bg-muted overflow-hidden">
+                                <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" style={{ width }} />
+                              </div>
+                            </div>
+                          );
+                        })
+                      ) : (
+                        <p className="text-sm text-muted-foreground">Monthly trend data will appear after a few focus sessions.</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="grid gap-4 lg:grid-cols-2">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">AI Smart Recommendation</CardTitle>
+                      <CardDescription>Quick next-step guidance based on your current workload.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm">
+                      {aiLoading ? (
+                        <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Loading AI insights...</div>
+                      ) : smartRecommendations.length > 0 ? (
+                        smartRecommendations.map((item) => (
+                          <p key={item} className="rounded-md border bg-muted/30 px-3 py-2">{item}</p>
+                        ))
+                      ) : (
+                        <p className="text-muted-foreground">AI recommendations will appear here once your task list is available.</p>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="text-base">Burnout Check</CardTitle>
+                      <CardDescription>Jessalyne checks your workload and suggests break time.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-2 text-sm">
+                      {burnoutRisk ? (
+                        <>
+                          <p>Risk level: <span className="font-semibold">{burnoutRisk.riskLevel}</span></p>
+                          <p>Workload: <span className="font-semibold">{burnoutRisk.workload}%</span></p>
+                          <p>Suggested break: <span className="font-semibold">{burnoutRisk.suggestedBreakTime} min</span></p>
+                          {burnoutRisk.recommendations.slice(0, 2).map((item) => (
+                            <p key={item} className="rounded-md border bg-muted/30 px-3 py-2">{item}</p>
+                          ))}
+                        </>
+                      ) : (
+                        <p className="text-muted-foreground">Burnout analysis will appear here after Jessalyne runs.</p>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">AI Smart Recommendation</CardTitle>
-                <CardDescription>Quick next-step guidance based on your current workload.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                {aiLoading ? (
-                  <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Loading AI insights...</div>
-                ) : smartRecommendations.length > 0 ? (
-                  smartRecommendations.map((item) => (
-                    <p key={item} className="rounded-md border bg-muted/30 px-3 py-2">{item}</p>
-                  ))
-                ) : (
-                  <p className="text-muted-foreground">AI recommendations will appear here once your task list is available.</p>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-base">Burnout Check</CardTitle>
-                <CardDescription>Jessalyne checks your workload and suggests break time.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2 text-sm">
-                {burnoutRisk ? (
-                  <>
-                    <p>Risk level: <span className="font-semibold">{burnoutRisk.riskLevel}</span></p>
-                    <p>Workload: <span className="font-semibold">{burnoutRisk.workload}%</span></p>
-                    <p>Suggested break: <span className="font-semibold">{burnoutRisk.suggestedBreakTime} min</span></p>
-                    {burnoutRisk.recommendations.slice(0, 2).map((item) => (
-                      <p key={item} className="rounded-md border bg-muted/30 px-3 py-2">{item}</p>
-                    ))}
-                  </>
-                ) : (
-                  <p className="text-muted-foreground">Burnout analysis will appear here after Jessalyne runs.</p>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+          {overdueTasks.length > 0 && (
+            <div className="bg-red-50/80 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-red-800 dark:text-red-400">Overdue Tasks ({overdueTasks.length})</h4>
+                  <p className="text-sm text-red-600/80 dark:text-red-400/80 mt-0.5">You have tasks that missed their deadline.</p>
+                </div>
+              </div>
+              <Button variant="destructive" size="sm" onClick={() => setActiveTaskTab("overdue")}>
+                Review Overdue
+              </Button>
+            </div>
+          )}
 
           <Card>
             <CardHeader className="pb-3">
@@ -383,6 +464,7 @@ export default function DashboardPage() {
                   <TabsTrigger value="urgent" className="data-[state=active]:text-red-600">Urgent</TabsTrigger>
                   <TabsTrigger value="incomplete">Incomplete</TabsTrigger>
                   <TabsTrigger value="completed">Completed</TabsTrigger>
+                  <TabsTrigger value="overdue" className="data-[state=active]:text-red-600 hidden">Overdue</TabsTrigger>
                 </TabsList>
                 <TabsContent value="urgent" className="space-y-3">
                   {renderTaskContent("urgent", "No urgent tasks right now. Great job staying ahead.")}
@@ -392,6 +474,9 @@ export default function DashboardPage() {
                 </TabsContent>
                 <TabsContent value="completed" className="space-y-3">
                   {renderTaskContent("completed", "No completed tasks yet. Start a session to build momentum.")}
+                </TabsContent>
+                <TabsContent value="overdue" className="space-y-3">
+                  {renderTaskContent("overdue", "No overdue tasks! You're completely on top of things.")}
                 </TabsContent>
               </Tabs>
             </CardContent>

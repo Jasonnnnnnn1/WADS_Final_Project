@@ -183,12 +183,12 @@ Based on `README.md` requirements and declared stack:
 - [x] Add appearance/accessibility settings (density, font size, reduced motion, contrast)
 
 ### Phase 13 — Dashboard Enhancements
-- [ ] Add Today Snapshot panel (due today count, urgent count, next planned item)
-- [ ] Add Quick Actions panel (add task, start focus, open AI plan, quick capture)
-- [ ] Add progress widgets (daily completion %, weekly streak, focus minutes today)
+- [x] Add Today Snapshot panel (due today count, urgent count, next planned item)
+- [x] Add Quick Actions panel (add task, start focus, open AI plan, quick capture)
+- [x] Add progress widgets (daily completion %, weekly streak, focus minutes today)
 - [x] Add Smart Recommendation card (suggested next task from AI plan)
-- [ ] Add Overdue shortcut section for immediate triage
-- [ ] Add collapsible dashboard sections to keep layout clean at scale
+- [x] Add Overdue shortcut section for immediate triage
+- [x] Add collapsible dashboard sections to keep layout clean at scale
 
 ### Phase 14 — Security Recommendations Backlog
 - [ ] Integrate security checks into existing endpoints (registration rate limiting + task validation utilities)
