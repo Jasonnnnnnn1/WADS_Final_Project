@@ -309,7 +309,7 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ## 13. AI Usage Disclosure
 
-* **AI tools used:** Groq API (Groq), Gemini (Google), Claude (Anthropic), Github Copilot.
+**AI tools used:** Groq API (Groq), Gemini (Google), Claude (Anthropic), Github Copilot.
 
 * **Groq:** Used as a core system feature for the AI Assistant chat, task prioritization, burnout detection, and AI analytics.
 * **Gemini:** Used during development to assist with brainstorming database schema optimizations, generating boilerplate unit test scenarios, and debugging Docker Compose port conflicts.
