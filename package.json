@@ -38,6 +38,7 @@
     "react-day-picker": "^9.13.2",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
+    "react-youtube": "^10.1.0",
     "remark-gfm": "^4.0.1",
     "swagger-ui-react": "^5.32.0",
     "tailwind-merge": "^3.4.0"
@@ -52,6 +53,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-youtube": "^7.6.2",
     "@types/swagger-ui-react": "^5.18.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

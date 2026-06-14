@@ -10,9 +10,13 @@ type AudioContextType = {
   setMusicTrackId: (id: string) => void;
   setMusicPlaying: (playing: boolean) => void;
   setAmbientVolume: (volume: number) => void;
+  musicVolume: number;
+  setMusicVolume: (volume: number) => void;
   toggleAmbientSound: (soundId: string) => void;
   stopAllSounds: () => void;
 };
+
+import YouTube, { type YouTubeProps } from "react-youtube";
 
 type AmbientSoundId =
   | "white"
@@ -325,14 +329,30 @@ function createAmbientSound(ctx: AudioContext, soundId: AmbientSoundId, output: 
 }
 
 export function AudioProvider({ children }: { children: ReactNode }) {
-  const [musicTrackId, setMusicTrackId] = useState("5jaT_8hy3Vg"); // Default to Lofi Hip Hop
+  const [musicTrackId, setMusicTrackId] = useState("l-2hOKIrIyI"); // Default to Lofi Hip Hop
   const [musicPlaying, setMusicPlaying] = useState(false);
+  const [musicVolume, setMusicVolume] = useState(0.5);
   const [ambientVolume, setAmbientVolume] = useState(0.7);
   const [activeAmbientSounds, setActiveAmbientSounds] = useState<string[]>([]);
 
   const ctxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const ambientNodesRef = useRef(new Map<AmbientSoundId, SoundNodeGroup>());
+  const ytPlayerRef = useRef<any>(null);
+
+  React.useEffect(() => {
+    if (ytPlayerRef.current && typeof ytPlayerRef.current.setVolume === 'function') {
+      ytPlayerRef.current.setVolume(musicVolume * 100);
+    }
+  }, [musicVolume]);
+
+  const onPlayerReady: YouTubeProps['onReady'] = (event) => {
+    ytPlayerRef.current = event.target;
+    event.target.setVolume(musicVolume * 100);
+    if (musicPlaying) {
+      event.target.playVideo();
+    }
+  };
 
   const ensureContext = useCallback(() => {
     const ctx = ctxRef.current ?? new AudioContext();
@@ -395,10 +415,12 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       value={{
         musicTrackId,
         musicPlaying,
+        musicVolume,
         ambientVolume,
         activeAmbientSounds,
         setMusicTrackId,
         setMusicPlaying,
+        setMusicVolume,
         setAmbientVolume,
         toggleAmbientSound,
         stopAllSounds,
@@ -407,13 +429,19 @@ export function AudioProvider({ children }: { children: ReactNode }) {
       {children}
       {/* Persistent music iframe */}
       {musicPlaying && (
-        <iframe
-          key={musicTrackId}
-          src={`https://www.youtube.com/embed/${musicTrackId}?autoplay=1&mute=0&controls=0&modestbranding=1`}
-          allow="autoplay; encrypted-media"
-          className="hidden"
-          title="Study music player"
-        />
+        <div className="hidden">
+          <YouTube
+            videoId={musicTrackId}
+            opts={{
+              playerVars: {
+                autoplay: 1,
+                controls: 0,
+                modestbranding: 1,
+              },
+            }}
+            onReady={onPlayerReady}
+          />
+        </div>
       )}
     </AudioStateContext.Provider>
   );

@@ -27,7 +27,7 @@ const MODE_CONFIG: Record<Mode, { label: string; minutes: number; color: string 
 
 // ─── Study music tracks ───────────────────────────────────────────────────────
 const MUSIC_TRACKS = [
-  { id: "5jaT_8hy3Vg", label: "Lofi Hip Hop Radio (10 Hours)" },
+  { id: "l-2hOKIrIyI", label: "Lofi Hip Hop Radio" },
   { id: "c7-81aUdLTI", label: "Smooth Jazz Study Radio" },
   { id: "WPni755-Krg", label: "Binaural Beats — Focus 40Hz" },
 ] as const;
@@ -55,126 +55,126 @@ const AMBIENT_SOUNDS: Array<{
   color: string;
   activeColor: string;
 }> = [
-  {
-    id: "white",
-    label: "White noise",
-    description: "Balanced, clean static",
-    color: "text-blue-500",
-    activeColor: "border-blue-400 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium",
-  },
-  {
-    id: "brown",
-    label: "Brown noise",
-    description: "Deep, muted rumble",
-    color: "text-indigo-500",
-    activeColor: "border-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium",
-  },
-  {
-    id: "pink",
-    label: "Pink noise",
-    description: "Mid-range tone, soothing",
-    color: "text-rose-500",
-    activeColor: "border-rose-400 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-medium",
-  },
-  {
-    id: "rain",
-    label: "Rain",
-    description: "Sparse drops with hum",
-    color: "text-cyan-500",
-    activeColor: "border-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 font-medium",
-  },
-  {
-    id: "stream",
-    label: "Stream",
-    description: "Flowing water, gentle",
-    color: "text-teal-500",
-    activeColor: "border-teal-400 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-medium",
-  },
-  {
-    id: "cafe",
-    label: "Cafe",
-    description: "Chatter and ambient hum",
-    color: "text-amber-500",
-    activeColor: "border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium",
-  },
-  {
-    id: "library",
-    label: "Library",
-    description: "Quiet room with page turns",
-    color: "text-stone-500",
-    activeColor: "border-stone-400 bg-stone-50 dark:bg-stone-950/40 text-stone-700 dark:text-stone-300 font-medium",
-  },
-  {
-    id: "office",
-    label: "Office",
-    description: "Keyboard and desk ambience",
-    color: "text-neutral-500",
-    activeColor: "border-neutral-400 bg-neutral-50 dark:bg-neutral-950/40 text-neutral-700 dark:text-neutral-300 font-medium",
-  },
-  {
-    id: "forest",
-    label: "Forest",
-    description: "Birds and rustling leaves",
-    color: "text-green-500",
-    activeColor: "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 font-medium",
-  },
-  {
-    id: "wind",
-    label: "Wind",
-    description: "Rustling, gentle",
-    color: "text-emerald-500",
-    activeColor: "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium",
-  },
-  {
-    id: "ocean",
-    label: "Ocean",
-    description: "Rhythmic tide motion",
-    color: "text-blue-600",
-    activeColor: "border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium",
-  },
-  {
-    id: "waves",
-    label: "Waves",
-    description: "Ocean rhythm, soothing",
-    color: "text-sky-500",
-    activeColor: "border-sky-400 bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-medium",
-  },
-  {
-    id: "train",
-    label: "Train",
-    description: "Rhythmic cabin rumble",
-    color: "text-violet-500",
-    activeColor: "border-violet-400 bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 font-medium",
-  },
-  {
-    id: "fan",
-    label: "Fan hum",
-    description: "Steady mechanical drone",
-    color: "text-slate-500",
-    activeColor: "border-slate-400 bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300 font-medium",
-  },
-  {
-    id: "campfire",
-    label: "Campfire",
-    description: "Crackling with warmth",
-    color: "text-orange-500",
-    activeColor: "border-orange-400 bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300 font-medium",
-  },
-  {
-    id: "thunder",
-    label: "Thunder",
-    description: "Deep rumbling storms",
-    color: "text-purple-500",
-    activeColor: "border-purple-400 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-medium",
-  },
-  {
-    id: "traffic",
-    label: "Traffic",
-    description: "Distant vehicular rumble",
-    color: "text-zinc-500",
-    activeColor: "border-zinc-400 bg-zinc-50 dark:bg-zinc-950/40 text-zinc-700 dark:text-zinc-300 font-medium",
-  },
-];
+    {
+      id: "white",
+      label: "White noise",
+      description: "Balanced, clean static",
+      color: "text-blue-500",
+      activeColor: "border-blue-400 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium",
+    },
+    {
+      id: "brown",
+      label: "Brown noise",
+      description: "Deep, muted rumble",
+      color: "text-indigo-500",
+      activeColor: "border-indigo-400 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-medium",
+    },
+    {
+      id: "pink",
+      label: "Pink noise",
+      description: "Mid-range tone, soothing",
+      color: "text-rose-500",
+      activeColor: "border-rose-400 bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 font-medium",
+    },
+    {
+      id: "rain",
+      label: "Rain",
+      description: "Sparse drops with hum",
+      color: "text-cyan-500",
+      activeColor: "border-cyan-400 bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 font-medium",
+    },
+    {
+      id: "stream",
+      label: "Stream",
+      description: "Flowing water, gentle",
+      color: "text-teal-500",
+      activeColor: "border-teal-400 bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 font-medium",
+    },
+    {
+      id: "cafe",
+      label: "Cafe",
+      description: "Chatter and ambient hum",
+      color: "text-amber-500",
+      activeColor: "border-amber-400 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-medium",
+    },
+    {
+      id: "library",
+      label: "Library",
+      description: "Quiet room with page turns",
+      color: "text-stone-500",
+      activeColor: "border-stone-400 bg-stone-50 dark:bg-stone-950/40 text-stone-700 dark:text-stone-300 font-medium",
+    },
+    {
+      id: "office",
+      label: "Office",
+      description: "Keyboard and desk ambience",
+      color: "text-neutral-500",
+      activeColor: "border-neutral-400 bg-neutral-50 dark:bg-neutral-950/40 text-neutral-700 dark:text-neutral-300 font-medium",
+    },
+    {
+      id: "forest",
+      label: "Forest",
+      description: "Birds and rustling leaves",
+      color: "text-green-500",
+      activeColor: "border-green-400 bg-green-50 dark:bg-green-950/40 text-green-700 dark:text-green-300 font-medium",
+    },
+    {
+      id: "wind",
+      label: "Wind",
+      description: "Rustling, gentle",
+      color: "text-emerald-500",
+      activeColor: "border-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-medium",
+    },
+    {
+      id: "ocean",
+      label: "Ocean",
+      description: "Rhythmic tide motion",
+      color: "text-blue-600",
+      activeColor: "border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 font-medium",
+    },
+    {
+      id: "waves",
+      label: "Waves",
+      description: "Ocean rhythm, soothing",
+      color: "text-sky-500",
+      activeColor: "border-sky-400 bg-sky-50 dark:bg-sky-950/40 text-sky-700 dark:text-sky-300 font-medium",
+    },
+    {
+      id: "train",
+      label: "Train",
+      description: "Rhythmic cabin rumble",
+      color: "text-violet-500",
+      activeColor: "border-violet-400 bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 font-medium",
+    },
+    {
+      id: "fan",
+      label: "Fan hum",
+      description: "Steady mechanical drone",
+      color: "text-slate-500",
+      activeColor: "border-slate-400 bg-slate-50 dark:bg-slate-950/40 text-slate-700 dark:text-slate-300 font-medium",
+    },
+    {
+      id: "campfire",
+      label: "Campfire",
+      description: "Crackling with warmth",
+      color: "text-orange-500",
+      activeColor: "border-orange-400 bg-orange-50 dark:bg-orange-950/40 text-orange-700 dark:text-orange-300 font-medium",
+    },
+    {
+      id: "thunder",
+      label: "Thunder",
+      description: "Deep rumbling storms",
+      color: "text-purple-500",
+      activeColor: "border-purple-400 bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-300 font-medium",
+    },
+    {
+      id: "traffic",
+      label: "Traffic",
+      description: "Distant vehicular rumble",
+      color: "text-zinc-500",
+      activeColor: "border-zinc-400 bg-zinc-50 dark:bg-zinc-950/40 text-zinc-700 dark:text-zinc-300 font-medium",
+    },
+  ];
 
 const SOUND_GROUPS = [
   { title: "Noise", ids: ["white", "brown", "pink"] as AmbientSoundId[] },
@@ -252,28 +252,49 @@ function SoundsPanel() {
         Headphones recommended for the best experience.
       </p>
 
-      <div className="space-y-1 px-1 pt-1">
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Volume</span>
-          <span>{Math.round(audio.ambientVolume * 100)}%</span>
+      <div className="space-y-3 px-1 pt-1">
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Ambient Volume</span>
+            <span>{Math.round(audio.ambientVolume * 100)}%</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={audio.ambientVolume}
+            onChange={(e) => audio.setAmbientVolume(Number(e.target.value))}
+            className="w-full accent-primary"
+          />
         </div>
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.01"
-          value={audio.ambientVolume}
-          onChange={(e) => audio.setAmbientVolume(Number(e.target.value))}
-          className="w-full accent-primary"
-        />
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
+            <span>Music Volume</span>
+            <span>{Math.round(audio.musicVolume * 100)}%</span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="1"
+            step="0.01"
+            value={audio.musicVolume}
+            onChange={(e) => audio.setMusicVolume(Number(e.target.value))}
+            className="w-full accent-primary"
+          />
+        </div>
       </div>
 
       {/* Music */}
       <div className="space-y-2 pt-1">
         <select
-          value={audio.musicTrackId}
+          value={MUSIC_TRACKS.find(t => t.id === audio.musicTrackId) ? audio.musicTrackId : "custom"}
           onChange={(e) => {
-            audio.setMusicTrackId(e.target.value);
+            if (e.target.value === "custom") {
+              audio.setMusicTrackId("custom");
+            } else {
+              audio.setMusicTrackId(e.target.value);
+            }
             audio.setMusicPlaying(false);
           }}
           className="w-full text-xs rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
@@ -281,7 +302,23 @@ function SoundsPanel() {
           {MUSIC_TRACKS.map((t) => (
             <option key={t.id} value={t.id}>{t.label}</option>
           ))}
+          <option value="custom">Custom YouTube Link...</option>
         </select>
+
+        {(!MUSIC_TRACKS.find(t => t.id === audio.musicTrackId) || audio.musicTrackId === "custom") && (
+          <input
+            type="text"
+            placeholder="Paste YouTube link here..."
+            className="w-full text-xs rounded-lg border border-border bg-background px-3 py-2 text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+            onChange={(e) => {
+              const url = e.target.value;
+              const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+              if (match && match[1]) {
+                audio.setMusicTrackId(match[1]);
+              }
+            }}
+          />
+        )}
 
         <button
           onClick={() => audio.setMusicPlaying(!audio.musicPlaying)}
@@ -326,19 +363,19 @@ export default function FocusTimerPage() {
   const [selectedTaskId, setSelectedTaskId] = React.useState<string | null>(null);
 
   // ── Timer ──
-    const { settings } = useUserSettings();
+  const { settings } = useUserSettings();
 
-    const [mode, setMode] = React.useState<Mode>("focus");
-    const initialFocus = typeof settings?.focusTimerDefaults?.focus === "number" ? settings.focusTimerDefaults.focus : MODE_CONFIG.focus.minutes;
-    const initialShort = typeof settings?.focusTimerDefaults?.short === "number" ? settings.focusTimerDefaults.short : MODE_CONFIG.short.minutes;
-    const initialLong = typeof settings?.focusTimerDefaults?.long === "number" ? settings.focusTimerDefaults.long : MODE_CONFIG.long.minutes;
-    const derivedConfig = React.useMemo(() => ({
-      focus: { ...MODE_CONFIG.focus, minutes: initialFocus },
-      short: { ...MODE_CONFIG.short, minutes: initialShort },
-      long: { ...MODE_CONFIG.long, minutes: initialLong },
-    }), [initialFocus, initialShort, initialLong]);
+  const [mode, setMode] = React.useState<Mode>("focus");
+  const initialFocus = typeof settings?.focusTimerDefaults?.focus === "number" ? settings.focusTimerDefaults.focus : MODE_CONFIG.focus.minutes;
+  const initialShort = typeof settings?.focusTimerDefaults?.short === "number" ? settings.focusTimerDefaults.short : MODE_CONFIG.short.minutes;
+  const initialLong = typeof settings?.focusTimerDefaults?.long === "number" ? settings.focusTimerDefaults.long : MODE_CONFIG.long.minutes;
+  const derivedConfig = React.useMemo(() => ({
+    focus: { ...MODE_CONFIG.focus, minutes: initialFocus },
+    short: { ...MODE_CONFIG.short, minutes: initialShort },
+    long: { ...MODE_CONFIG.long, minutes: initialLong },
+  }), [initialFocus, initialShort, initialLong]);
 
-    const [secondsLeft, setSecondsLeft] = React.useState(derivedConfig.focus.minutes * 60);
+  const [secondsLeft, setSecondsLeft] = React.useState(derivedConfig.focus.minutes * 60);
   const [running, setRunning] = React.useState(false);
   const startedAtRef = React.useRef<string | null>(null);
   const intervalRef = React.useRef<ReturnType<typeof setInterval> | null>(null);
