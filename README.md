@@ -34,13 +34,15 @@ Our target users are students whether it be in school or university who are in n
 We are developing a full-stack "Smart Study Planner" that automates the scheduling process.
 
 **Main Features:**
-- **Smart Scheduling:** Auto-allocates tasks into free calendar slots based on priority and deadlines.
-- **Focus Timer:** A built-in Pomodoro-style timer to track actual study duration.
-- **Progress Dashboard:** Visual analytics of study habits and task completion rates.
+
+* **Smart Scheduling:** Auto-allocates tasks into free calendar slots based on priority and deadlines.
+* **Focus Timer:** A built-in Pomodoro-style timer to track actual study duration, integrated with ambient sounds and YouTube Music.
+* **Progress Dashboard:** Visual analytics of study habits, priority breakdowns, and task completion rates.
 
 **AI Integration:**
-- **AI Scheduler:** Uses an algorithm to generate optimal daily schedules, preventing overlaps and overloading.
-- **Burnout Detection:** Analyzes study patterns to detect fatigue and suggest breaks or schedule adjustments.
+
+* **AI Scheduler/Prioritization:** Uses an algorithm to generate optimal daily schedules, preventing overlaps and overloading.
+* **Dedicated AI Chat Assistant:** Powered by Gemini SDK, providing an interactive chat room for study advice, schedule adjustments, and burnout detection.
 
 ---
 
@@ -54,7 +56,7 @@ We are developing a full-stack "Smart Study Planner" that automates the scheduli
 | **Database**         | **PostgreSQL**        | Relational database managed via **Prisma ORM** for structured task/schedule data. |
 | **Auth**             | **Firebase Auth**     | Handles user identity (Google Sign-In) and token generation.                      |
 | **Containerization** | **Docker**            | Dockerfiles for both Frontend and Backend; Docker Compose for orchestration.      |
-| **Deployment**       | **Hosting platform**  | Vercel, Binus(?)                                                                  |
+| **Deployment**       | **Hosting platform**  | Dedicated Server                                                                  |
 | **Version Control**  | **GitHub**            | Repository with main and feature branches.                                        |
 
 ---
@@ -65,38 +67,41 @@ We are developing a full-stack "Smart Study Planner" that automates the scheduli
 
 ### 5.1 Architecture Diagram
 
-    graph TD
-        subgraph Client_Side ["Frontend (User's Browser)"]
-            UI[Next.js React UI]
-            Timer[Study Timer Component]
-            Calendar[Calendar Component]
-        end
+```mermaid
+graph TD
+    subgraph Client_Side ["Frontend (User's Browser)"]
+        UI[Next.js React UI]
+        Timer[Study Timer Component]
+        Calendar[Calendar Component]
+    end
 
-        subgraph Server_Side ["Backend (Next.js API Routes)"]
-            Auth[Auth Middleware (JWT)]
-            TaskAPI[Task Management API]
-            AnalyticsAPI[Analytics Engine]
-            AI_Service[AI Prioritization Service]
-        end
-    
-        subgraph External_Services ["Infrastructure & External"]
-            DB[(PostgreSQL Database)]
-            OpenAI[OpenAI GPT-4o API]
-        end
-    
-        %% Data Flow Connections
-        UI -->|HTTPS Requests| Auth
-        Auth -->|Validated Request| TaskAPI
-        Auth -->|Validated Request| AnalyticsAPI
-    
-        TaskAPI -->|CRUD Operations| DB
-        AnalyticsAPI -->|Query Logs| DB
-    
-        TaskAPI -->|Send Task Prompt| AI_Service
-        AI_Service -->|Request Priority| OpenAI
-        OpenAI -->|Return JSON| AI_Service
-    
-        Timer -->|Sync Session Data| AnalyticsAPI
+    subgraph Server_Side ["Backend (Next.js API Routes)"]
+        Auth[Auth Middleware (JWT)]
+        TaskAPI[Task Management API]
+        AnalyticsAPI[Analytics Engine]
+        AI_Service[AI Prioritization Service]
+    end
+
+    subgraph External_Services ["Infrastructure & External"]
+        DB[(PostgreSQL Database)]
+        Gemini[Gemini AI API]
+    end
+
+    %% Data Flow Connections
+    UI -->|HTTPS Requests| Auth
+    Auth -->|Validated Request| TaskAPI
+    Auth -->|Validated Request| AnalyticsAPI
+
+    TaskAPI -->|CRUD Operations| DB
+    AnalyticsAPI -->|Query Logs| DB
+
+    TaskAPI -->|Send Task Prompt| AI_Service
+    AI_Service -->|Request Priority| Gemini
+    Gemini -->|Return JSON/Markdown| AI_Service
+
+    Timer -->|Sync Session Data| AnalyticsAPI
+
+```
 
 ### 5.2 Architecture Explanation
 
@@ -137,5 +142,7 @@ The system is built on a **Client-Server Architecture** utilizing the Next.js fr
 | **GET**    | `/api/sessions`      | Retrieves focus session logs for the logged-in user.       | Yes           |
 | **POST**   | `/api/sessions`      | Logs a completed study session (timer data).               | Yes           |
 | **GET**    | `/api/analytics`     | Retrieves productivity stats (e.g., total study hours).    | Yes           |
+
+
 
 ---
