@@ -63,8 +63,6 @@ We are developing a full-stack "Smart Study Planner" that automates the scheduli
 
 ## 5. System Architecture
 
-![System Architecture Diagram](./docs/architecture.png)
-
 ### 5.1 Architecture Diagram
 
 ```mermaid
