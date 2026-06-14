@@ -63,37 +63,7 @@ const AMBIENT_SOUND_IDS: AmbientSoundId[] = [
 
 const AudioStateContext = createContext<AudioContextType | undefined>(undefined);
 
-function createNoiseProcessor(
-  ctx: AudioContext,
-  generator: (index: number, last: number) => { sample: number; last: number },
-  volume: number,
-  output: AudioNode
-): SoundNodeGroup {
-  const bufferSize = 4096;
-  const processor = ctx.createScriptProcessor(bufferSize, 1, 1);
-  const gain = ctx.createGain();
-  gain.gain.value = volume;
 
-  let last = 0;
-  processor.onaudioprocess = (event) => {
-    const channel = event.outputBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) {
-      const result = generator(i, last);
-      channel[i] = result.sample;
-      last = result.last;
-    }
-  };
-
-  processor.connect(gain);
-  gain.connect(output);
-
-  return {
-    stop: () => {
-      processor.disconnect();
-      gain.disconnect();
-    },
-  };
-}
 
 function createNoiseSource(ctx: AudioContext) {
   const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * 2));
@@ -338,6 +308,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
   const ctxRef = useRef<AudioContext | null>(null);
   const masterGainRef = useRef<GainNode | null>(null);
   const ambientNodesRef = useRef(new Map<AmbientSoundId, SoundNodeGroup>());
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const ytPlayerRef = useRef<any>(null);
 
   React.useEffect(() => {

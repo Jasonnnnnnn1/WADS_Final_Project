@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   try {
     const settings = await ensureAndGetUserSettings(auth);
     return ok(settings);
-  } catch (e) {
+  } catch {
     return err("Failed to load settings", 500);
   }
 }
@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest) {
   try {
     const updated = await updateUserSettings(auth, body as Record<string, unknown>);
     return ok(updated);
-  } catch (e) {
+  } catch {
     return err("Failed to update settings", 500);
   }
 }

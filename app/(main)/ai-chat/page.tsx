@@ -10,7 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { auth } from "@/lib/firebase";
 import { DEFAULT_AI_SETTINGS, loadAISettings, type AISettings } from "@/lib/ai-preferences";
-import { Loader2, Send, Plus, MessageCircle, Trash2, Pencil, Sparkles, Menu, X, ChevronLeft } from "lucide-react";
+import { Loader2, Send, Plus, MessageCircle, Trash2, Pencil, Sparkles, Menu, ChevronLeft } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -77,6 +77,7 @@ export default function AIChatPage() {
     if (idToken) {
       fetchConversations(idToken);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idToken]);
 
   // Scroll to bottom when messages change

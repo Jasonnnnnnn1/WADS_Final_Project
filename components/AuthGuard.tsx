@@ -3,7 +3,7 @@
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const PROFILE_SETUP_PATH = "/profile-setup";
 
@@ -31,11 +31,11 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [checkingAuth, setCheckingAuth] = useState(true);
 
-  const redirectToLogin = (reason?: string) => {
+  const redirectToLogin = useCallback((reason?: string) => {
     const next = encodeURIComponent(pathname || "/dashboard");
     const reasonPart = reason ? `&reason=${encodeURIComponent(reason)}` : "";
     router.replace(`/login?next=${next}${reasonPart}`);
-  };
+  }, [router, pathname]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -71,7 +71,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     });
 
     return () => unsubscribe();
-  }, [router, pathname]);
+  }, [router, pathname, redirectToLogin]);
 
   if (checkingAuth) {
     return (
