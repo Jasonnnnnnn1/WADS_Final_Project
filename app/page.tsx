@@ -277,10 +277,10 @@ export default function HomePage() {
               </h2>
             </div>
             <div className="grid gap-6 lg:grid-cols-2">
-              {steps.map((s, i) => (
-                <Card key={s.num} className={`border-slate-100 bg-[#f7f7fb] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md py-0 ${i % 2 === 1 ? "lg:mt-8" : ""}`}>
-                  <CardContent className="flex gap-5 p-6">
-                    <span className="shrink-0 select-none text-4xl font-bold text-indigo-100">{s.num}</span>
+              {steps.map((s) => (
+                <Card key={s.num} className="border-slate-100 bg-[#f7f7fb] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md py-0">
+                  <CardContent className="flex h-full items-start gap-5 p-6">
+                    <span className="shrink-0 select-none text-4xl font-bold text-indigo-400">{s.num}</span>
                     <div>
                       <h3 className="text-lg font-semibold">{s.title}</h3>
                       <p className="mt-2 text-sm leading-relaxed text-slate-500">{s.desc}</p>
