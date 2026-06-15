@@ -305,7 +305,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex flex-col md:flex-row gap-3">
-            <Button onClick={() => router.push('/tasks')} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white border-0">
+            <Button onClick={() => router.push('/activities?new=1')} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white border-0">
               <Plus className="w-4 h-4 mr-2" /> Add Task
             </Button>
             <Button onClick={() => router.push('/focus-timer')} variant="outline" className="flex-1">
