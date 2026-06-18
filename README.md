@@ -235,8 +235,6 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ### 10.2 Backend & API Testing
 
-### 10.2 Backend & API Testing
-
 | Test Case | Endpoint | Input | Expected Output | Status |
 | --- | --- | --- | --- | --- |
 | S01 | `/api/auth/register` | Valid new email + password >= 6 | 201 | Pass / Fail |
