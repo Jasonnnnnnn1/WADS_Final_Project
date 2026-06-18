@@ -201,11 +201,18 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ### 7.2 Schema / Data Structure
 
-* **User:** `id` (PK, matches Firebase UID), `email`, `name`, `themePreference`, `createdAt`
-* **Task:** `id` (PK), `userId` (FK), `title`, `description`, `dueDate`, `priority`, `status`, `courseTag`
-* **FocusSession:** `id` (PK), `userId` (FK), `taskId` (FK), `startTime`, `endTime`, `durationMinutes`
-* **AIChat:** `id` (PK), `userId` (FK), `messageHistory` (JSON), `createdAt`
+| Model | Attributes | Relationships |
+| :--- | :--- | :--- |
+| **User** | `id` (PK)<br>`email`<br>`username` (Unique)<br>`profilePhotoUrl`<br>`profileCompleted`<br>`createdAt` | 1-to-Many with **Task**<br>1-to-Many with **FocusSession**<br>1-to-Many with **AIChat**<br>1-to-1 with **UserSettings** |
+| **Task** | `id` (PK)<br>`userId` (FK)<br>`title` / `description`<br>`status` / `priority`<br>`startTime` / `endTime` | Belongs to **User**<br>1-to-Many with **FocusSession** |
+| **FocusSession** | `id` (PK)<br>`userId` (FK)<br>`taskId` (FK)<br>`durationMinutes`<br>`startedAt` / `completedAt` | Belongs to **User**<br>Belongs to **Task** |
+| **AIChatConversation**| `id` (PK)<br>`userId` (FK)<br>`title`<br>`updatedAt` | Belongs to **User**<br>1-to-Many with **AIChatMessage** |
+| **AIChatMessage** | `id` (PK)<br>`conversationId` (FK)<br>`role` (user/assistant)<br>`content`<br>`createdAt` | Belongs to **AIChatConversation** |
+| **UserSettings** | `id` (PK)<br>`userId` (FK)<br>`notificationRules` (JSON)<br>`focusTimerDefaults` (JSON)<br>`aiPreferences` (JSON) | Belongs to **User** |
 
+### 7.3 ER Diagram Visualization
+
+```mermaid
 erDiagram
     User {
         String id PK
@@ -290,6 +297,7 @@ erDiagram
     Task ||--o{ FocusSession : "logged in"
     
     AIChatConversation ||--o{ AIChatMessage : "contains many"
+```
 
 ## 8. AI Features
 
