@@ -224,7 +224,7 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ## 10. Testing Documentation
 
-**Tests run via Jest — 191 tests passed across 16 suites ✅**
+**Tests run via Jest — 133 tests passed across 16 suites ✅**
 
 ```bash
 npx jest --no-coverage
