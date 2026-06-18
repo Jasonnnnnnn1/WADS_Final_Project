@@ -128,18 +128,35 @@ The system is built on a **Client-Server Architecture** utilizing the Next.js fr
 
 #### 6.1 API Endpoints
 
-| Method | Endpoint | Description | Auth Required |
+#### Endpoints for Authentication
+
+| Endpoint | Method | Description | Auth Required |
 | --- | --- | --- | --- |
-| **POST** | `/api/auth/register` | Registers a new user account. | No |
-| **GET** | `/api/auth/session` | Validates Firebase ID token and returns session info. | Yes |
-| **GET** | `/api/tasks` | Retrieves paginated tasks for the logged-in user. | Yes |
-| **POST** | `/api/tasks` | Creates a new task. | Yes |
-| **PUT** | `/api/tasks/[id]` | Updates task fields (e.g., status toggles). | Yes |
-| **DELETE** | `/api/tasks/[id]` | Deletes a specific task. | Yes |
-| **POST** | `/api/sessions` | Logs a completed study session (timer data). | Yes |
-| **GET** | `/api/analytics` | Retrieves productivity stats (e.g., total study hours). | Yes |
-| **POST** | `/api/ai/prioritize` | **AI Feature:** Analyzes task details to suggest priority. | Yes |
-| **POST** | `/api/ai/chat` | **AI Feature:** Handles messages for the AI study assistant. | Yes |
+| `/api/auth/register` | POST | Registers a new user account. | No |
+| `/api/auth/session` | GET | Validates Firebase ID token and returns session info. | Yes |
+
+#### Endpoints for Task CRUD
+
+| Endpoint | Method | Description | Auth Required |
+| --- | --- | --- | --- |
+| `/api/tasks` | GET | Retrieves paginated tasks for the logged-in user. | Yes |
+| `/api/tasks` | POST | Creates a new task. | Yes |
+| `/api/tasks/[id]` | PUT | Updates task fields (e.g., status toggles). | Yes |
+| `/api/tasks/[id]` | DELETE | Deletes a specific task. | Yes |
+
+#### Endpoints for Sessions & Analytics
+
+| Endpoint | Method | Description | Auth Required |
+| --- | --- | --- | --- |
+| `/api/sessions` | POST | Logs a completed study session (timer data). | Yes |
+| `/api/analytics` | GET | Retrieves productivity stats (e.g., total study hours). | Yes |
+
+#### Endpoints for AI Features
+
+| Endpoint | Method | Description | Auth Required |
+| --- | --- | --- | --- |
+| `/api/ai/prioritize` | POST | **AI Feature:** Analyzes task details to suggest priority. | Yes |
+| `/api/ai/chat` | POST | **AI Feature:** Handles messages for the AI study assistant. | Yes |
 
 * **Swagger UI Link:** Available locally at `http://localhost:3000/api-docs` when the server is running.
 * **Example Request & Response (JSON):**
