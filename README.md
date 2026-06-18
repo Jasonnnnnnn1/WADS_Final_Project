@@ -235,10 +235,41 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 
 ### 10.2 Backend & API Testing
 
+### 10.2 Backend & API Testing
+
 | Test Case | Endpoint | Input | Expected Output | Status |
 | --- | --- | --- | --- | --- |
-| API-01 | `POST /api/tasks` | Valid Task JSON + JWT | 201 Created, returns new Task ID | Pass |
-| API-02 | `GET /api/tasks` | Missing JWT Header | 401 Unauthorized | Pass |
+| S01 | `/api/auth/register` | Valid new email + password >= 6 | 201 | Pass / Fail |
+| S02 | `/api/auth/register` | Missing/invalid body (e.g., no email) | 400 | Pass / Fail |
+| S03 | `/api/auth/register` | Email already exists | 409 | Pass / Fail |
+| S04 | `/api/auth/register` | Firebase Admin failure (misconfigured credentials) | 500 | Pass / Fail |
+| S05 | `/api/auth/session` | Valid bearer token | 200 | Pass / Fail |
+| S06 | `/api/auth/session` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S07 | `/api/tasks` | Valid token | 200 | Pass / Fail |
+| S08 | `/api/tasks` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S09 | `/api/tasks` | Valid payload (title, startTime, endTime) | 201 | Pass / Fail |
+| S10 | `/api/tasks` | Invalid payload (e.g., endTime before startTime) | 400 | Pass / Fail |
+| S11 | `/api/tasks` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S12 | `/api/tasks/{id}` | User A gets own task | 200 | Pass / Fail |
+| S13 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S14 | `/api/tasks/{id}` | User B tries to read User A task | 403 | Pass / Fail |
+| S15 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
+| S16 | `/api/tasks/{id}` | User A updates own task | 200 | Pass / Fail |
+| S17 | `/api/tasks/{id}` | Invalid payload (e.g., bad date / end before start) | 400 | Pass / Fail |
+| S18 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S19 | `/api/tasks/{id}` | User B tries to update User A task | 403 | Pass / Fail |
+| S20 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
+| S21 | `/api/tasks/{id}` | User A deletes own task | 200 | Pass / Fail |
+| S22 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S23 | `/api/tasks/{id}` | User B tries to delete User A task | 403 | Pass / Fail |
+| S24 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
+| S25 | `/api/sessions` | Valid token | 200 | Pass / Fail |
+| S26 | `/api/sessions` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S27 | `/api/sessions` | Valid payload | 201 | Pass / Fail |
+| S28 | `/api/sessions` | Invalid payload (e.g., durationMinutes <= 0) | 400 | Pass / Fail |
+| S29 | `/api/sessions` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S30 | `/api/analytics` | Valid token | 200 | Pass / Fail |
+| S31 | `/api/analytics` | Missing/invalid bearer token | 401 | Pass / Fail |
 
 ### 10.3 Security Testing
 
