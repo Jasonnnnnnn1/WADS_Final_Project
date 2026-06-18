@@ -206,6 +206,91 @@ We chose **PostgreSQL** (managed via **Prisma ORM**).
 * **FocusSession:** `id` (PK), `userId` (FK), `taskId` (FK), `startTime`, `endTime`, `durationMinutes`
 * **AIChat:** `id` (PK), `userId` (FK), `messageHistory` (JSON), `createdAt`
 
+erDiagram
+    User {
+        String id PK
+        String email
+        String displayName
+        String username
+        String firstName
+        String lastName
+        String university
+        String major
+        String profilePhotoUrl
+        Boolean profileCompleted
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    Task {
+        String id PK
+        String userId FK
+        String title
+        String description
+        String status
+        String priority
+        String category
+        String course
+        String taskLink
+        String attachmentName
+        String attachmentMimeType
+        String attachmentDataUrl
+        DateTime startTime
+        DateTime endTime
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    FocusSession {
+        String id PK
+        String userId FK
+        String taskId FK
+        Int durationMinutes
+        DateTime startedAt
+        DateTime completedAt
+        String notes
+        DateTime createdAt
+    }
+
+    AIChatConversation {
+        String id PK
+        String userId FK
+        String title
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    AIChatMessage {
+        String id PK
+        String conversationId FK
+        String role
+        String content
+        DateTime createdAt
+    }
+
+    UserSettings {
+        String id PK
+        String userId FK
+        Json notificationRules
+        Json calendarPreferences
+        Json focusTimerDefaults
+        Json privacyControls
+        Json appearanceSettings
+        Json aiPreferences
+        DateTime createdAt
+        DateTime updatedAt
+    }
+
+    %% Relationships
+    User ||--o{ Task : "has many"
+    User ||--o{ FocusSession : "has many"
+    User ||--o{ AIChatConversation : "starts many"
+    User ||--o| UserSettings : "has one"
+    
+    Task ||--o{ FocusSession : "logged in"
+    
+    AIChatConversation ||--o{ AIChatMessage : "contains many"
+
 ## 8. AI Features
 
 ### 8.1 AI Feature List
