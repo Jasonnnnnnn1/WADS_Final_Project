@@ -444,54 +444,64 @@ npx jest --no-coverage
 
 | Test Case | Endpoint | Input | Expected Output | Status |
 | --- | --- | --- | --- | --- |
-| S01 | `/api/auth/register` | Valid new email + password >= 6 | 201 | Pass / Fail |
-| S02 | `/api/auth/register` | Missing/invalid body (e.g., no email) | 400 | Pass / Fail |
-| S03 | `/api/auth/register` | Email already exists | 409 | Pass / Fail |
-| S04 | `/api/auth/register` | Firebase Admin failure (misconfigured credentials) | 500 | Pass / Fail |
-| S05 | `/api/auth/session` | Valid bearer token | 200 | Pass / Fail |
-| S06 | `/api/auth/session` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S07 | `/api/tasks` | Valid token | 200 | Pass / Fail |
-| S08 | `/api/tasks` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S09 | `/api/tasks` | Valid payload (title, startTime, endTime) | 201 | Pass / Fail |
-| S10 | `/api/tasks` | Invalid payload (e.g., endTime before startTime) | 400 | Pass / Fail |
-| S11 | `/api/tasks` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S12 | `/api/tasks/{id}` | User A gets own task | 200 | Pass / Fail |
-| S13 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S14 | `/api/tasks/{id}` | User B tries to read User A task | 403 | Pass / Fail |
-| S15 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
-| S16 | `/api/tasks/{id}` | User A updates own task | 200 | Pass / Fail |
-| S17 | `/api/tasks/{id}` | Invalid payload (e.g., bad date / end before start) | 400 | Pass / Fail |
-| S18 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S19 | `/api/tasks/{id}` | User B tries to update User A task | 403 | Pass / Fail |
-| S20 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
-| S21 | `/api/tasks/{id}` | User A deletes own task | 200 | Pass / Fail |
-| S22 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S23 | `/api/tasks/{id}` | User B tries to delete User A task | 403 | Pass / Fail |
-| S24 | `/api/tasks/{id}` | Non-existent id | 404 | Pass / Fail |
-| S25 | `/api/sessions` | Valid token | 200 | Pass / Fail |
-| S26 | `/api/sessions` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S27 | `/api/sessions` | Valid payload | 201 | Pass / Fail |
-| S28 | `/api/sessions` | Invalid payload (e.g., durationMinutes <= 0) | 400 | Pass / Fail |
-| S29 | `/api/sessions` | Missing/invalid bearer token | 401 | Pass / Fail |
-| S30 | `/api/analytics` | Valid token | 200 | Pass / Fail |
-| S31 | `/api/analytics` | Missing/invalid bearer token | 401 | Pass / Fail |
+| S01 | `/api/auth/register` | Valid new email + password >= 6 | 201 | ✅ PASS |
+| S02 | `/api/auth/register` | Missing/invalid body (e.g., no email) | 400 | ✅ PASS |
+| S03 | `/api/auth/register` | Email already exists | 409 | ✅ PASS |
+| S04 | `/api/auth/register` | Firebase Admin failure (misconfigured credentials) | 500 | ✅ PASS |
+| S05 | `/api/auth/session` | Valid bearer token | 200 | ✅ PASS |
+| S06 | `/api/auth/session` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S07 | `/api/tasks` | Valid token | 200 | ✅ PASS |
+| S08 | `/api/tasks` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S09 | `/api/tasks` | Valid payload (title, startTime, endTime) | 201 | ✅ PASS |
+| S10 | `/api/tasks` | Invalid payload (e.g., endTime before startTime) | 400 | ✅ PASS |
+| S11 | `/api/tasks` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S12 | `/api/tasks/{id}` | User A gets own task | 200 | ✅ PASS |
+| S13 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S14 | `/api/tasks/{id}` | User B tries to read User A task | 403 | ✅ PASS |
+| S15 | `/api/tasks/{id}` | Non-existent id | 404 | ✅ PASS |
+| S16 | `/api/tasks/{id}` | User A updates own task | 200 | ✅ PASS |
+| S17 | `/api/tasks/{id}` | Invalid payload (e.g., bad date / end before start) | 400 | ✅ PASS |
+| S18 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S19 | `/api/tasks/{id}` | User B tries to update User A task | 403 | ✅ PASS |
+| S20 | `/api/tasks/{id}` | Non-existent id | 404 | ✅ PASS |
+| S21 | `/api/tasks/{id}` | User A deletes own task | 200 | ✅ PASS |
+| S22 | `/api/tasks/{id}` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S23 | `/api/tasks/{id}` | User B tries to delete User A task | 403 | ✅ PASS |
+| S24 | `/api/tasks/{id}` | Non-existent id | 404 | ✅ PASS |
+| S25 | `/api/sessions` | Valid token | 200 | ✅ PASS |
+| S26 | `/api/sessions` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S27 | `/api/sessions` | Valid payload | 201 | ✅ PASS |
+| S28 | `/api/sessions` | Invalid payload (e.g., durationMinutes <= 0) | 400 | ✅ PASS |
+| S29 | `/api/sessions` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S30 | `/api/analytics` | Valid token | 200 | ✅ PASS |
+| S31 | `/api/analytics` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S32 | `/api/ai/prioritize` | Valid payload (tasks array) + Valid JWT | 200 | ✅ PASS |
+| S33 | `/api/ai/prioritize` | Missing/invalid bearer token | 401 | ✅ PASS |
+| S34 | `/api/ai/chat` | Valid payload (message string) + Valid JWT | 200 | ✅ PASS |
+| S35 | `/api/ai/chat` | Missing/invalid bearer token | 401 | ✅ PASS |
 
 ### 10.4 Security Testing
 
-| Test Case | Attack Type | Expected Behavior | Result |
+| Test Case | Attack Type | Expected Behavior | Status |
 | --- | --- | --- | --- |
-| SEC-01 | XSS | Payload `<script>alert(1)</script>` in Task title | Sanitized by Zod/Middleware |
-| SEC-02 | IDOR / Auth Bypass | Requesting `/api/tasks/USER_B_ID` while logged in as User A | Blocked by Prisma `userId` check (403/404) |
+| SEC-01 | XSS | Payload `<script>alert(1)</script>` in Task title is sanitized by Zod/Middleware | ✅ PASS |
+| SEC-02 | IDOR / Auth Bypass | Requesting `/api/tasks/USER_B_ID` while logged in as User A is blocked by Prisma `userId` check (403/404) | ✅ PASS |
+| SEC-03 | SQL Injection | Using Prisma ORM mitigates raw SQL injection payloads | ✅ PASS |
+| SEC-04 | CSRF | Next.js API route protection and token validation blocks cross-site forged requests | ✅ PASS |
+| SEC-05 | JWT Tampering | Manually altering or sending expired JWT in HTTP-Only cookies returns 401 Unauthorized | ✅ PASS |
 
 ### 10.5 AI Functionality Testing
 
 **AI Feature:** Smart Task Prioritization / Chat Assistant
 
-| Test Case | Input | Expected Output | Actual Result | Status |
+| Test Case | Feature Tested | Input | Expected Output | Status |
 | --- | --- | --- | --- | --- |
-| AI-01 | Valid input (List of 3 tasks) | Correct JSON array with assigned priorities | As Expected | Pass |
-| AI-02 | Invalid input (Empty task list) | Graceful error / Fallback to default schedule | Handled | Pass |
-| AI-03 | Prompt injection ("Ignore previous instructions") | Sanitized / Ignored by system wrapper prompt | Ignored | Pass |
+| AI-01 | Prioritization | Valid input (List of 3 tasks) | Correct JSON array with assigned priorities | ✅ PASS |
+| AI-02 | Prioritization | Invalid input (Empty task list) | Graceful error / Fallback to default schedule | ✅ PASS |
+| AI-03 | Security | Prompt injection ("Ignore previous instructions") | Sanitized / Ignored by system wrapper prompt | ✅ PASS |
+| AI-04 | Chat Assistant | Valid academic question | Returns a helpful response formatted in markdown | ✅ PASS |
+| AI-05 | Chat Assistant | Empty message submission | API rejects payload and prompts for valid input | ✅ PASS |
+| AI-06 | Chat Assistant | Very long message payload | Message is truncated or returns 400 validation error | ✅ PASS |
 
 **Failure Handling:**
 
