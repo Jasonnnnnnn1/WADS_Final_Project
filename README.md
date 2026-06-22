@@ -9,9 +9,8 @@
 
 **Group Members:**
 - **Michael Arianno Chandrarieta** / SID: 2802499711 / Role: Backend, AI-Designer, Security Handler / Github: MichaelFirstAC
-- **Timothy Jonathan Imannuel** / SID: 2802521825 / Role: Frontend Lead, Debugger / Github: Timotimanuel12
+- **Timothy Jonathan Imannuel** / SID: 2802521825 / Role: Frontend Lead, Debugger / Github: Timotimanuel12, sxc-internal
 - **Jason Franto Fong** / SID: 2802557781 / Role: Database, Deployment, UI-Tester, Documenter / Github: Jasonnnnnnn1
-- **sxc-internal (Timothy)** / SID: 2802521825 / Role: Frontend Lead, Debugger / Github: Timotimanuel12
 
 ## 2. Instructor & Repository Access
 
